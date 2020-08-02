@@ -1,0 +1,10 @@
+.\objects\hc_05.o: Code\src\hc_05.c
+.\objects\hc_05.o: .\CMSIS\inc\stm32f10x.h
+.\objects\hc_05.o: .\CMSIS\inc\core_cm3.h
+.\objects\hc_05.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\hc_05.o: .\CMSIS\inc\system_stm32f10x.h
+.\objects\hc_05.o: .\Code\inc\hc_05.h
+.\objects\hc_05.o: .\Code\inc\usart_1.h
+.\objects\hc_05.o: .\Code\inc\usart_2.h
+.\objects\hc_05.o: .\Code\inc\one_wire.h
+.\objects\hc_05.o: .\Code\inc\dma.h
