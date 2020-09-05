@@ -1,9 +1,0 @@
-.\objects\one_wire.o: Code\src\one_wire.c
-.\objects\one_wire.o: .\CMSIS\inc\stm32f10x.h
-.\objects\one_wire.o: .\CMSIS\inc\core_cm3.h
-.\objects\one_wire.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\one_wire.o: .\CMSIS\inc\system_stm32f10x.h
-.\objects\one_wire.o: .\Code\inc\one_wire.h
-.\objects\one_wire.o: .\Code\inc\dma.h
-.\objects\one_wire.o: .\Code\inc\usart_1.h
-.\objects\one_wire.o: .\Code\inc\usart_2.h
