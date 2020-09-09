@@ -23,6 +23,7 @@
 #define OW_0					0x00
 #define OW_1					0xff
 #define OW_R_1				0xff
+#define Key_iButton_1 0x0000010628D6
 
 
 

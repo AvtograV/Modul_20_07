@@ -5,8 +5,9 @@ extern uint8_t ow_t_buf[8]; 			// буфер для передачи по 1-wire
 extern uint8_t ow_r_buf[8]; 			// буфер для приёма по 1-wire
 
 uint8_t t_integer_current = 0; 		// переменная для сохранения текущего значения температуры
-
+int64_t i_button_serial_num = 0; 	// полученный серийный номер ключа i-button
 char t_buffer_char[] = {0};				// массив для символьного значения температуры
+
 
 const uint16_t pow10Table2_16[] =
 	{
@@ -226,23 +227,20 @@ void temp_measure_request(void)
 
 /********************* система контроля доступа IBUTTON ***********************/
 void i_Button(void)	{
-
-	int8_t i_button_serial_num = 0; 	// полученный серийный номер ключа i-button
 	
-	// read ROM [33h] или [0Fh]
+	// read ROM [33h]
 	// math ROM [55h]
 	// skip ROM [CCh]
 	// searсh ROM [F0h]
-
-	OW_Send(OW_SEND_RESET, "\33", 1, (uint8_t *)&i_button_serial_num, 2, 2);
 	
-	vTaskDelay(10000);
-
-	utoa_cycle_sub(i_button_serial_num, t_buffer_char);
-
-	USART2_Send_String("Серийный номер iButton ");
-	USART2_Send_String(t_buffer_char);
-
-	USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
-	USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+	OW_Send(OW_SEND_RESET, "\x33\xff\xff\xff\xff\xff\xff\xff\xff", 9, (uint8_t *)&i_button_serial_num, 6, 2);
+	
+	if (i_button_serial_num == Key_iButton_1) {
+	
+		USART2_Send_String("iButton");
+		USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
+		USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+	 }
+		
+	vTaskDelay(5000);
 }
