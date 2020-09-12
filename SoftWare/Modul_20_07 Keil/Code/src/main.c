@@ -13,7 +13,7 @@ int main(void){
 	Init_DMA1_USART1_TX();
 	Init_DMA1_USART1_RX();
 	
-//	xTaskCreate (vTaskMeasureTemp, "измерение температуры DS18B20 ( 1-Wire)", 32, NULL, 1, NULL);
+	xTaskCreate (vTaskMeasureTemp, "измерение температуры DS18B20 ( 1-Wire)", 32, NULL, 1, NULL);
 	xTaskCreate (vTaskUSART2_IRQHandlerAndroid, "обработка прерываний (запросов) от ОС Android по USART2", 32, NULL, 1, NULL);
 	xTaskCreate (vTaskEXTI9_5_IRQHandler, "обработка EXTI (внешнего прерывания) от iButton", 32, NULL, 1, NULL);
 	

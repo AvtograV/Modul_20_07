@@ -30,7 +30,7 @@ extern uint8_t flag_EXTI9;
 	void vTaskEXTI9_5_IRQHandler (void *argument) {
 		for (;;) {
        if (flag_EXTI9) {
-				 
+				 vTaskDelay(10);
 				 i_Button();				
 				 flag_EXTI9 = 0;
 			}
