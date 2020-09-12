@@ -25,9 +25,9 @@
 	}
 	
 	
-	/******************** задача - получение серийного номера ключа iButton *********************/
-	void vTaskGetSerialNumberKeyI_Button (void *argument) {
-		while(1) {
-			i_Button();
-		}
+	/**************** задача - обработка внешнего прерывания на PA9 от iButton *****************/
+	void vTaskEXTI9_5_IRQHandler (void *argument) {		
+			while (1) {
+				EXTI9_5_IRQHandler();
+			}
 	}

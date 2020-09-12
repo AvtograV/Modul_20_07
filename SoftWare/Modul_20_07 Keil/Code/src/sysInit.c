@@ -28,3 +28,11 @@ void RCC_Init (void){
   RCC->CFGR |= RCC_CFGR_SW_PLL;                 							// select source SYSCLK = PLL
 	while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_1) {} 			// wait till PLL is used	
 }
+
+
+
+/*******************************************************************************************************/
+void GPIO_Init (void) {
+	RCC -> APB2ENR |= RCC_APB2ENR_IOPCEN;
+	GPIOC -> CRH |= GPIO_CRH_MODE13_0;
+}

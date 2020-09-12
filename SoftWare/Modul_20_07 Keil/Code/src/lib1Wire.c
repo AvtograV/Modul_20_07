@@ -168,7 +168,7 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 	return OW_OK;
 }
 
-/************ измерить температуру и отправить в приложение Android ************/
+/************ измерить температуру и отправить в приложение Android ***********/
 void measure_temperature(void)
 {
 
@@ -225,22 +225,17 @@ void temp_measure_request(void)
 	USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
 }
 
-/********************* система контроля доступа IBUTTON ***********************/
+/********************* система контроля доступа IBUTTON ***********************/	
 void i_Button(void)	{
-	
-	// read ROM [33h]
-	// math ROM [55h]
-	// skip ROM [CCh]
-	// searсh ROM [F0h]
 	
 	OW_Send(OW_SEND_RESET, "\x33\xff\xff\xff\xff\xff\xff\xff\xff", 9, (uint8_t *)&i_button_serial_num, 6, 2);
 	
-	if (i_button_serial_num == Key_iButton_1) {
+	if (i_button_serial_num == Key_iButton_1 || i_button_serial_num == Key_iButton_2) {
 	
-		USART2_Send_String("iButton");
-		USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
-		USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
-	 }
+		GPIOC -> BSRR |= GPIO_BSRR_BR13;
+		vTaskDelay(5000);
+		GPIOC->BSRR |= GPIO_BSRR_BS13;
 		
-	vTaskDelay(5000);
+		i_button_serial_num = 0;
+	 }
 }

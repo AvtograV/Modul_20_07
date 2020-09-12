@@ -16,14 +16,16 @@
 #define OW_ERROR    		2
 #define OW_NO_DEVICE		3
 
-#define OW_NO_READ    0xff
+#define OW_NO_READ    	0xff
 
-#define OW_READ_SLOT	0xff
+#define OW_READ_SLOT		0xff
 
-#define OW_0					0x00
-#define OW_1					0xff
-#define OW_R_1				0xff
-#define Key_iButton_1 0x0000010628D6
+#define OW_0						0x00
+#define OW_1						0xff
+#define OW_R_1					0xff
+
+#define Key_iButton_1 	0x0000010628D6
+#define Key_iButton_2 	0x00000105BA4E
 
 
 

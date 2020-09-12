@@ -19,3 +19,4 @@
 .\objects\lib_vtask.o: .\Code\inc\libUART.h
 .\objects\lib_vtask.o: .\FreeRTOS\inc\queue.h
 .\objects\lib_vtask.o: .\Code\inc\libHc05.h
+.\objects\lib_vtask.o: .\Code\inc\libExit.h

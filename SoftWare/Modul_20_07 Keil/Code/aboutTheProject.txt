@@ -1,1 +1,5 @@
-Первый модуль большого проекта.
+iButton:
+read ROM [33h]
+math ROM [55h]
+skip ROM [CCh]
+searсh ROM [F0h]

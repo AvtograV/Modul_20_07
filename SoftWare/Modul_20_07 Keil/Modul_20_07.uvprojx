@@ -488,9 +488,14 @@
               <FilePath>.\Code\src\libHc05.c</FilePath>
             </File>
             <File>
-              <FileName>aboutTheProject.txt</FileName>
+              <FileName>libExti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Code\src\libExti.c</FilePath>
+            </File>
+            <File>
+              <FileName>Item.txt</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Code\aboutTheProject.txt</FilePath>
+              <FilePath>.\Code\Item.txt</FilePath>
             </File>
           </Files>
         </Group>
