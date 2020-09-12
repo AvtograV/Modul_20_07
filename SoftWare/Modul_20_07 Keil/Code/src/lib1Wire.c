@@ -233,8 +233,8 @@ void i_Button(void)	{
 	if (i_button_serial_num == Key_iButton_1 || i_button_serial_num == Key_iButton_2) {
 	
 		GPIOC -> BSRR |= GPIO_BSRR_BR13;
-		vTaskDelay(5000);
-		GPIOC->BSRR |= GPIO_BSRR_BS13;
+		vTaskDelay(1000);
+		GPIOC -> BSRR |= GPIO_BSRR_BS13;
 		
 		i_button_serial_num = 0;
 	 }
