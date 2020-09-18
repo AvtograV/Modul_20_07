@@ -1,8 +1,8 @@
 #include "lib1Wire.h"
 
 
-extern uint8_t ow_t_buf[8]; 			// буфер для передачи по 1-wire
-extern uint8_t ow_r_buf[8]; 			// буфер для приёма по 1-wire
+extern uint8_t buf_DS18B20_USART1_DMA1_tx[8];
+extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 
 uint8_t t_integer_current = 0; 		// переменная для сохранения текущего значения температуры
 int64_t i_button_serial_num = 0; 	// полученный серийный номер ключа i-button
@@ -12,9 +12,11 @@ char t_buffer_char[] = {0};				// массив для символьного з�
 const uint16_t pow10Table2_16[] =
 	{
 		10ul,
-		1ul};
+		1ul
+	};
 	
 
+/************* функция преобразование числового значения в символьное (2 знака) *************/
 char *utoa_cycle_sub(uint16_t value, char *buffer)
 {
 	if (value == 0)
@@ -145,7 +147,7 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 
 	while (cLen > 0)
 	{
-		OW_toBits(*command, ow_t_buf);
+		OW_toBits(*command, buf_DS18B20_USART1_DMA1_tx);
 		command++;
 		cLen--;
 
@@ -153,7 +155,7 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 
 		if (readStart == 0 && dLen > 0)
 		{
-			*data = OW_toByte(ow_r_buf);
+			*data = OW_toByte(buf_DS18B20_USART1_DMA1_rx);
 			data++;
 			dLen--;
 		}

@@ -7,11 +7,14 @@ int main(void){
 	InitEXTI_9();
 	GPIO_Init();
 	
-	Init_USART1_for_1_Wire();
-	Init_USART2_for_HC_05();
+	Init_USART1_DS18B20();
+	Init_USART2_HC_05();
+	Init_USART3_iButton();
 	
-	Init_DMA1_USART1_TX();
+	Init_DMA1_USART1_TX();																	// DS18B20
 	Init_DMA1_USART1_RX();
+	Init_DMA1_USART3_TX();																	// iButton
+	Init_DMA1_USART3_RX();
 	
 	xTaskCreate (vTaskMeasureTemp, "измерение температуры DS18B20 ( 1-Wire)", 32, NULL, 1, NULL);
 	xTaskCreate (vTaskUSART2_IRQHandlerAndroid, "обработка прерываний (запросов) от ОС Android по USART2", 32, NULL, 1, NULL);

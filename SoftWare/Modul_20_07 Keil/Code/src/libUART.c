@@ -2,9 +2,8 @@
 
 #include "libUART.h"
 
-/***************************** USART1 (PA9 - TX, PA10 - RX) *****************************/
-void Init_USART1_for_1_Wire(void)
-{
+/*********************** USART1 (PA9 (Single Wire (Half-Duplex) ************************/
+void Init_USART1_DS18B20(void) {
 
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
@@ -44,7 +43,7 @@ void USART1_Send_String(char *str)
 		USART1_Send_Char(str[i++]);
 }
 
-/*************************** изменить скорость USART1 (1-WIRE) **************************/
+/************************** изменить скорость USART1 (DS18B20) **************************/
 void change_speed_USART1(uint32_t set_speed)
 {
 	USART1->CR1 &= (uint32_t) ~(USART_CR1_TE);
@@ -61,7 +60,7 @@ void change_speed_USART1(uint32_t set_speed)
 
 
 /****************************** USART2 (PA2 - TX, PA3 - RX) *****************************/
-void Init_USART2_for_HC_05(void)
+void Init_USART2_HC_05(void)
 {
 
 	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
@@ -104,4 +103,61 @@ void USART2_Send_String(char *str)
 
 	while (str[i])
 		USART2_Send_Char(str[i++]);
+}
+
+
+
+
+/*********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
+void Init_USART3_iButton(void) {
+
+	RCC -> APB1ENR |= RCC_APB1ENR_USART3EN;
+	RCC -> APB2ENR |= RCC_APB2ENR_IOPBEN;
+	RCC -> APB2ENR |= RCC_APB2ENR_AFIOEN;
+
+	// настройка вывода PB10 на режим альтернативной функции с активным выходом
+	// биты CNF = 10, биты MODE = X1
+	GPIOB -> CRH &= (~GPIO_CRH_CNF10_0);
+	GPIOB -> CRH |= GPIO_CRH_CNF10_1;
+	GPIOB -> CRH |= GPIO_CRH_MODE10;
+
+	USART3 -> CR3 |= USART_CR3_HDSEL;												// Half duplex mode
+
+	USART3 -> BRR = FCKL_APB1 / BAUDRATE_USART3;
+
+	USART3 -> CR1 |= USART_CR1_RXNEIE;
+	USART3 -> CR1 |= USART_CR1_TCIE;
+
+	USART3 -> CR1 |= USART_CR1_TE;
+	USART3 -> CR1 |= USART_CR1_RE;
+	USART3 -> CR1 |= USART_CR1_UE;
+}
+
+
+/******************************* отправить байт по USART3 *******************************/
+void USART3_Send_Char(char chr)
+{
+	while (!(USART3 -> SR & USART_SR_TC));
+	
+	USART3 -> DR = chr;
+}
+
+/****************************** отправить строку по USART3 ******************************/
+void USART3_Send_String(char *str)
+{
+	uint8_t i = 0;
+	while (str[i])
+		USART3_Send_Char(str[i++]);
+}
+
+/*************************** изменить скорость USART3 (iButton) **************************/
+void change_speed_USART3(uint32_t set_speed)
+{
+	USART3 -> CR1 &= (uint32_t) ~(USART_CR1_TE);
+	USART3 -> CR1 &= (uint32_t) ~(USART_CR1_RE);
+
+	USART3 -> BRR = FCKL_APB1 / set_speed;
+
+	USART3 -> CR1 |= (uint32_t)(USART_CR1_TE);
+	USART3 -> CR1 |= (uint32_t)(USART_CR1_RE);
 }

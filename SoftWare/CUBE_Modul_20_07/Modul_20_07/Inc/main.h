@@ -58,6 +58,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define USART2_HC_05_TX_Pin GPIO_PIN_2
+#define USART2_HC_05_TX_GPIO_Port GPIOA
+#define USART2_HC_05_RX_Pin GPIO_PIN_3
+#define USART2_HC_05_RX_GPIO_Port GPIOA
+#define USART3_iButton_Pin GPIO_PIN_10
+#define USART3_iButton_GPIO_Port GPIOB
+#define USART1_DS18B20_Pin GPIO_PIN_9
+#define USART1_DS18B20_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
