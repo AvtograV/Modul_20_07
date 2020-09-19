@@ -2,7 +2,7 @@
 
 #include "libUART.h"
 
-/*********************** USART1 (PA9 (Single Wire (Half-Duplex) ************************/
+/******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20 *******************/
 void Init_USART1_DS18B20(void) {
 
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
@@ -27,7 +27,7 @@ void Init_USART1_DS18B20(void) {
 	USART1->CR1 |= USART_CR1_UE;
 }
 
-/******************************* отправить байт по USART1 *******************************/
+/************************** отправить байт по USART1 (DS18B20) *************************/
 void USART1_Send_Char(char chr)
 {
 	while (!(USART1->SR & USART_SR_TC));
@@ -35,7 +35,7 @@ void USART1_Send_Char(char chr)
 	USART1->DR = chr;
 }
 
-/****************************** отправить строку по USART1 ******************************/
+/************************ отправить строку по USART1 (DS18B20) *************************/
 void USART1_Send_String(char *str)
 {
 	uint8_t i = 0;
@@ -43,7 +43,7 @@ void USART1_Send_String(char *str)
 		USART1_Send_Char(str[i++]);
 }
 
-/************************** изменить скорость USART1 (DS18B20) **************************/
+/************************** изменить скорость USART1 (DS18B20) *************************/
 void change_speed_USART1(uint32_t set_speed)
 {
 	USART1->CR1 &= (uint32_t) ~(USART_CR1_TE);
@@ -59,7 +59,7 @@ void change_speed_USART1(uint32_t set_speed)
 
 
 
-/****************************** USART2 (PA2 - TX, PA3 - RX) *****************************/
+/************************* USART2 (PA2 - TX, PA3 - RX) (HC-05) *************************/
 void Init_USART2_HC_05(void)
 {
 
@@ -85,7 +85,7 @@ void Init_USART2_HC_05(void)
 }
 
 
-/******************************* отправить байт по USART2 *******************************/
+/************************** отправить байт по USART2 (HC-05) ***************************/
 void USART2_Send_Char(char chr)
 {
 
@@ -95,7 +95,7 @@ void USART2_Send_Char(char chr)
 }
 
 
-/****************************** отправить строку по USART2 ******************************/
+/************************* отправить строку по USART2 (HC-05) **************************/
 void USART2_Send_String(char *str)
 {
 
@@ -108,7 +108,7 @@ void USART2_Send_String(char *str)
 
 
 
-/*********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
+/********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
 void Init_USART3_iButton(void) {
 
 	RCC -> APB1ENR |= RCC_APB1ENR_USART3EN;
@@ -134,7 +134,7 @@ void Init_USART3_iButton(void) {
 }
 
 
-/******************************* отправить байт по USART3 *******************************/
+/****************************** отправить байт по USART3 *******************************/
 void USART3_Send_Char(char chr)
 {
 	while (!(USART3 -> SR & USART_SR_TC));
@@ -142,7 +142,7 @@ void USART3_Send_Char(char chr)
 	USART3 -> DR = chr;
 }
 
-/****************************** отправить строку по USART3 ******************************/
+/***************************** отправить строку по USART3 ******************************/
 void USART3_Send_String(char *str)
 {
 	uint8_t i = 0;
@@ -150,7 +150,7 @@ void USART3_Send_String(char *str)
 		USART3_Send_Char(str[i++]);
 }
 
-/*************************** изменить скорость USART3 (iButton) **************************/
+/************************* изменить скорость USART3 (iButton) **************************/
 void change_speed_USART3(uint32_t set_speed)
 {
 	USART3 -> CR1 &= (uint32_t) ~(USART_CR1_TE);
