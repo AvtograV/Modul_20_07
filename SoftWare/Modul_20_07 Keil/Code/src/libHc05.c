@@ -1,5 +1,7 @@
 #include "libHc05.h"
 
+extern uint8_t t_integer_current;								// переменная для сохранения текущего значения температуры
+
 /********************** принять байт от HC-05 по USART1 **********************/
 void USART2_IRQHandler(void) {
 	if (USART2 -> SR & USART_SR_RXNE) {
@@ -18,8 +20,10 @@ void USART2_IRQHandler(void) {
 					USART2_Send_Char(0xD);
 					USART2_Send_Char(0xA);
 				}
-				else if (USART2 -> DR == 'r') {					// запрос температуры сразу после подключения по Bluetooth
-					temp_measure_request ();
+			else if (USART2 -> DR == 'r') {					// запрос температуры сразу после подключения по Bluetooth
+					
+				t_integer_current = 0;
+				temp_measure_request();
 				}
 		}
 }

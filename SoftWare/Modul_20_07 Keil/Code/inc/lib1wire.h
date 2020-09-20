@@ -27,24 +27,17 @@
 #define Key_iButton_1 	0x0000010628D6
 #define Key_iButton_2 	0x00000105BA4E
 
+#define usart1_DS18B20	1
+#define usart3_iButton	3
 
 
 
-/************************* приём - передача по 1-wire *************************/
-uint8_t OW_Send (uint8_t sendReset, char *command, uint8_t cLen, uint8_t *data, uint8_t dLen, uint8_t readStart);
 
-/*********** измерить температуру и отправить в приложение Android ************/
-void measure_temperature (void);
-
-/********************* измерение температуры по запросу ***********************/
+/*********** измерить температуру и отправить в приложение Android (в т. ч. по запросу)************/
 void temp_measure_request (void);
 
-/********************* система контроля доступа IBUTTON ***********************/
+/******************************* система контроля доступа IBUTTON *********************************/
 void i_Button(void);
-
-/******************************************************************************/
-char *utoa_cycle_sub(uint16_t value, char *buffer);
-
 
 
 #endif 								// LIB1WIRE_H

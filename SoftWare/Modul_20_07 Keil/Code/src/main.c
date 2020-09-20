@@ -5,7 +5,7 @@ int main(void){
 	
 	RCC_Init();	
 	InitEXTI_9();
-	GPIO_Init();
+//	GPIO_Init();
 	
 	Init_USART1_DS18B20();
 	Init_USART2_HC_05();
@@ -16,9 +16,10 @@ int main(void){
 	Init_DMA1_USART3_TX();																	// iButton
 	Init_DMA1_USART3_RX();
 	
-	xTaskCreate (vTaskMeasureTemp, "измерение температуры DS18B20 ( 1-Wire)", 32, NULL, 1, NULL);
+
 	xTaskCreate (vTaskUSART2_IRQHandlerAndroid, "обработка прерываний (запросов) от ОС Android по USART2", 32, NULL, 1, NULL);
-	xTaskCreate (vTaskEXTI9_5_IRQHandler, "обработка EXTI (внешнего прерывания) от iButton", 32, NULL, 1, NULL);
+//	xTaskCreate (vTaskEXTI9_5_IRQHandler, "обработка EXTI (внешнего прерывания) от iButton", 32, NULL, 1, NULL);
+	xTaskCreate(vTaskPeriodicFunctionCall, "вызов функций через определённый промежуток времени", 32, NULL, 1, NULL);
 	
 	vTaskStartScheduler();
 	

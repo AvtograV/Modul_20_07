@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             public void run() {
                                 if (sbprint.contains("temp")) {
                                     textTemp.setText(sbprint + "\u00B0");
-                                } else if (sbprint.contains("Temp")) {
+                                } else if (sbprint.contains("request")) {
                                     textTemp.setText(sbprint + "\u00B0");
                                     Toast.makeText(MainActivity.this, "Температура по запросу", Toast.LENGTH_SHORT).show();
                                 } else {

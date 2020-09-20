@@ -4,10 +4,13 @@
 extern uint8_t buf_DS18B20_USART1_DMA1_tx[8];
 extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 
+
+int16_t Tx16 = 0; 								// результат измерения - двухбайтовое целое со знаком,
+																	// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
+																	
 uint8_t t_integer_current = 0; 		// переменная для сохранения текущего значения температуры
 int64_t i_button_serial_num = 0; 	// полученный серийный номер ключа i-button
 char t_buffer_char[] = {0};				// массив для символьного значения температуры
-
 
 const uint16_t pow10Table2_16[] =
 	{
@@ -98,22 +101,31 @@ uint8_t OW_toByte(uint8_t *ow_bits)
 /******************************************************************************/
 // осуществляет сброс и проверку на наличие устройств на шине
 /******************************************************************************/
-uint8_t OW_Reset()
-{
+uint8_t OW_Reset(uint8_t num_usart) {
 
 	uint8_t ow_presence;
+	
+	if (num_usart == 1) {															// USART1
 
-	change_speed_USART1(9600);
-
-	USART1_Send_Char(0xf0);
-
-	while (!(USART1->SR & USART_SR_TC))
-	{
+		change_speed_USART1(9600);
+		USART1_Send_Char(0xf0);
+		
+		while (!(USART1->SR & USART_SR_TC))	{}
+		
+		ow_presence = USART1->DR;
+		change_speed_USART1(115200);
 	}
-	ow_presence = USART1->DR;
+	else if (num_usart == 3) {												// USART3
 
-	change_speed_USART1(115200);
-
+		change_speed_USART3(9600);
+		USART3_Send_Char(0xf0);
+		
+		while (!(USART3->SR & USART_SR_TC))	{}
+		
+		ow_presence = USART3->DR;
+		change_speed_USART3(115200);
+	}
+	
 	if (ow_presence != 0xf0)
 	{
 		return OW_OK;
@@ -125,9 +137,10 @@ uint8_t OW_Reset()
 //	процедура общения с шиной 1-wire
 /******************************************************************************/
 
-uint8_t OW_Send(	   // ниже указанны аргументы функции OW_Send ()
+uint8_t OW_Send(	   // ниже указанны аргументы функции OW_Send ()	
 	uint8_t sendReset, // sendReset - посылать RESET в начале общения
 										 // OW_SEND_RESET или OW_NO_RESET
+	uint8_t numUsart,	 // указать какой USART используется
 	char *command,	   // command - массив байт, отсылаемых в шину.
 										 // если нужно чтение - отправляем OW_READ_SLOTH
 	uint8_t cLen,	   	 // cLen - длина буфера команд, столько байт отошлется в шину
@@ -137,10 +150,9 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 	uint8_t readStart) // readStart - с какого символа передачи начинать чтение, нумеруются с 0
 {
 
-	if (sendReset == OW_SEND_RESET)
-	{
-		if (OW_Reset() == OW_NO_DEVICE)
-		{
+	if (sendReset == OW_SEND_RESET)	{
+		if (OW_Reset(numUsart) == OW_NO_DEVICE)	{
+			
 			return OW_NO_DEVICE;
 		}
 	}
@@ -151,7 +163,13 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 		command++;
 		cLen--;
 
-		Exchange_DMA1_USART1();
+		if (numUsart == 1) {
+			Exchange_DMA1_USART1();										// обмен DMA1 - USART1 - DMA1
+		}
+		else if (numUsart == 3) {
+			Exchange_DMA1_USART3();										// обмен DMA1 - USART3 - DMA1
+		}
+		
 
 		if (readStart == 0 && dLen > 0)
 		{
@@ -170,67 +188,47 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 	return OW_OK;
 }
 
+
 /************ измерить температуру и отправить в приложение Android ***********/
-void measure_temperature(void)
-{
-
-	int16_t Tx16 = 0; // результат измерения - двухбайтовое целое со знаком,
-										// содержащее температуру в градусах, умноженную на 16
-
-	OW_Send(OW_SEND_RESET, "\xcc\x44", 2, 0, 0, OW_NO_READ); // SKIP ROM, CONVERT T
+void temp_measure_request(void) {
+		
+		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\xcc\x44", 2, 0, 0, OW_NO_READ); 									// SKIP ROM, CONVERT T	
+		vTaskDelay(1000);
+		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\xcc\xbe\xff\xff", 4, (uint8_t *)&Tx16, 2, 2); 		// SKIP ROM, READ SCRATCHPAD
+		
+		// разделить полученное значение на 16
+		uint8_t t_integer_new = Tx16 >> 4;
 	
-	vTaskDelay(1000);
+		// проверить - если значение температуры изменилось - отправить новое значение
+		// если не изменилось - не отправлять
+		if (t_integer_current != t_integer_new) {
+			
+			// поменять текущее значение на новое
+			t_integer_current = t_integer_new;
+			// преобразовать из цифровых в символьные значения
+			utoa_cycle_sub(t_integer_new, t_buffer_char);
 
-	OW_Send(OW_SEND_RESET, "\xcc\xbe\xff\xff", 4, (uint8_t *)&Tx16, 2, 2); // SKIP ROM, READ SCRATCHPAD
-	
-	// разделить полученное значение на 16
-	uint8_t t_integer_new = Tx16 >> 4;
-	
-	// проверить - если значение температуры изменилось - отправить новое значение
-	// если не изменилось - не отправлять
-	if (t_integer_current != t_integer_new)
-	{
-		// поменять текущее значение на новое
-		t_integer_current = t_integer_new;
-		// преобразовать из цифровых в символьные значения
-		utoa_cycle_sub(t_integer_new, t_buffer_char);
+			if (t_integer_current == 0) {
+				USART2_Send_String("Temperuture");
+				USART2_Send_Char('\n');
+				USART2_Send_String(" on request ");
+			}
+			else			
+				USART2_Send_String("temp ");
+			
+			USART2_Send_String(t_buffer_char);
 
-		USART2_Send_String("temp ");
-		USART2_Send_String(t_buffer_char);
-
-		USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
-		USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
-	}
-}
-
-/********************* измерение температуры по запросу ***********************/
-void temp_measure_request(void)
-{
-
-	int16_t Tx16 = 0; // результат измерения - двухбайтовое целое со знаком,
-										// содержащее температуру в градусах, умноженную на 16
-
-	OW_Send(OW_SEND_RESET, "\xcc\x44", 2, 0, 0, OW_NO_READ); // SKIP ROM, CONVERT T
-	
-	vTaskDelay(1000);
-	
-	OW_Send(OW_SEND_RESET, "\xcc\xbe\xff\xff", 4, (uint8_t *)&Tx16, 2, 2); // SKIP ROM, READ SCRATCHPAD
-
-	uint8_t t_integer_new = Tx16 >> 4;
-
-	utoa_cycle_sub(t_integer_new, t_buffer_char);
-
-	USART2_Send_String("Temp ");
-	USART2_Send_String(t_buffer_char);
-
-	USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
-	USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+			USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
+			USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+			
+			t_integer_current = t_integer_new;																										// обновить значение температуры
+		}
 }
 
 /********************* система контроля доступа IBUTTON ***********************/	
 void i_Button(void)	{
 	
-	OW_Send(OW_SEND_RESET, "\x33\xff\xff\xff\xff\xff\xff\xff\xff", 9, (uint8_t *)&i_button_serial_num, 6, 2);
+	OW_Send(OW_SEND_RESET, usart3_iButton, "\x33\xff\xff\xff\xff\xff\xff\xff\xff", 9, (uint8_t *)&i_button_serial_num, 6, 2);
 	
 	if (i_button_serial_num == Key_iButton_1 || i_button_serial_num == Key_iButton_2) {
 	
