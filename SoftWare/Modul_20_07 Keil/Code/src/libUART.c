@@ -1,6 +1,7 @@
-/******************************** Library ***********************************************/
-
 #include "libUART.h"
+
+extern uint8_t t_integer_current;								// переменная для сохранения текущего значения температуры
+
 
 /******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20 *******************/
 void Init_USART1_DS18B20(void) {
@@ -106,6 +107,33 @@ void USART2_Send_String(char *str)
 }
 
 
+/********************** принять байт от HC-05 по USART2 **********************/
+void USART2_IRQHandler(void) {
+	if (USART2 -> SR & USART_SR_RXNE) {
+			if (USART2 -> DR == 'a') {
+				GPIOB -> BSRR |= GPIO_BSRR_BS12;									// open the lock (on solenoid coil - 1)
+					USART2_Send_String("D12 ON");
+					USART2_Send_Char(0xD);
+					USART2_Send_Char(0xA);
+				}
+			else if (USART2 -> DR == 'A') {
+					USART2_Send_String("D12 OFF");
+				GPIOB -> BSRR |= GPIO_BSRR_BR12;									// close the lock (on solenoid coil - 0)
+					USART2_Send_Char(0xD);
+					USART2_Send_Char(0xA);
+				}
+			else if (USART2 -> DR == 'B') {
+					USART2_Send_String("D12 ON");
+					USART2_Send_Char(0xD);
+					USART2_Send_Char(0xA);
+				}
+			else if (USART2 -> DR == 'r') {					// запрос температуры сразу после подключения по Bluetooth
+					
+				t_integer_current = 0;
+				temp_measure_request();
+				}
+		}
+}
 
 
 /********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/

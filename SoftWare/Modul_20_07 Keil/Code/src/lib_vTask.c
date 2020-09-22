@@ -1,7 +1,7 @@
 #include "lib_vTask.h"
 
-extern uint8_t flag_EXTI9;
-const uint32_t valueDelay = 1;
+extern uint8_t flag_EXTI_PB10;
+const uint32_t valueDelay = 100;
 
 
 	/************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
@@ -12,21 +12,21 @@ const uint32_t valueDelay = 1;
 	}
 	
 	
-	/**************** задача - обработка внешнего прерывания на PA9 от iButton *****************/
-	void vTaskEXTI9_5_IRQHandler (void *argument) {
+	/**************** задача - обработка внешнего прерывания на PB10 от iButton *****************/
+	void vTaskEXTI10_IRQHandler (void *argument) {
 		for (;;) {
-       if (flag_EXTI9) {
-				 vTaskDelay(10);
-				 i_Button();				
-				 flag_EXTI9 = 0;
+       if (flag_EXTI_PB10) {
+					i_Button();
+					flag_EXTI_PB10 = 0;
 			}
 		}
 	}
 
+	
 	/********** задача - вызов различных функций через определённый промежуток времени **********/
 	void vTaskPeriodicFunctionCall (void *argument) {
 		while(1) {
-			temp_measure_request();
+			temp_measure_request();			
 			vTaskDelay(valueDelay);
-		}
 	}
+}

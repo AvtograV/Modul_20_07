@@ -4,3 +4,17 @@
 .\objects\libuart.o: .\CMSIS\inc\core_cm3.h
 .\objects\libuart.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\libuart.o: .\CMSIS\inc\system_stm32f10x.h
+.\objects\libuart.o: .\Code\inc\lib1wire.h
+.\objects\libuart.o: .\Code\inc\libDMA.h
+.\objects\libuart.o: .\Code\inc\libUART.h
+.\objects\libuart.o: .\FreeRTOS\inc\FreeRTOS.h
+.\objects\libuart.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\libuart.o: .\Code\inc\FreeRTOSConfig.h
+.\objects\libuart.o: .\FreeRTOS\inc\projdefs.h
+.\objects\libuart.o: .\FreeRTOS\inc\portable.h
+.\objects\libuart.o: .\FreeRTOS\inc\deprecated_definitions.h
+.\objects\libuart.o: .\FreeRTOS\inc\portmacro.h
+.\objects\libuart.o: .\FreeRTOS\inc\mpu_wrappers.h
+.\objects\libuart.o: .\FreeRTOS\inc\task.h
+.\objects\libuart.o: .\FreeRTOS\inc\list.h
+.\objects\libuart.o: .\FreeRTOS\inc\queue.h

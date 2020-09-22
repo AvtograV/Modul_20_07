@@ -4,3 +4,13 @@
 .\objects\sysinit.o: .\CMSIS\inc\core_cm3.h
 .\objects\sysinit.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\sysinit.o: .\CMSIS\inc\system_stm32f10x.h
+.\objects\sysinit.o: .\FreeRTOS\inc\FreeRTOS.h
+.\objects\sysinit.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\sysinit.o: .\Code\inc\FreeRTOSConfig.h
+.\objects\sysinit.o: .\FreeRTOS\inc\projdefs.h
+.\objects\sysinit.o: .\FreeRTOS\inc\portable.h
+.\objects\sysinit.o: .\FreeRTOS\inc\deprecated_definitions.h
+.\objects\sysinit.o: .\FreeRTOS\inc\portmacro.h
+.\objects\sysinit.o: .\FreeRTOS\inc\mpu_wrappers.h
+.\objects\sysinit.o: .\FreeRTOS\inc\task.h
+.\objects\sysinit.o: .\FreeRTOS\inc\list.h

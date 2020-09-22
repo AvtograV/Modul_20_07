@@ -6,6 +6,7 @@
 .\objects\lib1wire.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\lib1wire.o: .\CMSIS\inc\system_stm32f10x.h
 .\objects\lib1wire.o: .\Code\inc\libUART.h
+.\objects\lib1wire.o: .\Code\inc\lib1wire.h
 .\objects\lib1wire.o: .\FreeRTOS\inc\FreeRTOS.h
 .\objects\lib1wire.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\lib1wire.o: .\Code\inc\FreeRTOSConfig.h

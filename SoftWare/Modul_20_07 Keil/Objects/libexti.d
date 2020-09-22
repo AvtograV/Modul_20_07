@@ -5,8 +5,9 @@
 .\objects\libexti.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\libexti.o: .\CMSIS\inc\system_stm32f10x.h
 .\objects\libexti.o: .\Code\inc\libUART.h
-.\objects\libexti.o: .\Code\inc\lib1Wire.h
+.\objects\libexti.o: .\Code\inc\lib1wire.h
 .\objects\libexti.o: .\Code\inc\libDMA.h
+.\objects\libexti.o: .\Code\inc\libUART.h
 .\objects\libexti.o: .\FreeRTOS\inc\FreeRTOS.h
 .\objects\libexti.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\libexti.o: .\Code\inc\FreeRTOSConfig.h

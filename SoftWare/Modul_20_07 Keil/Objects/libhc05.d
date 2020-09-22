@@ -4,17 +4,3 @@
 .\objects\libhc05.o: .\CMSIS\inc\core_cm3.h
 .\objects\libhc05.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\libhc05.o: .\CMSIS\inc\system_stm32f10x.h
-.\objects\libhc05.o: .\Code\inc\libUART.h
-.\objects\libhc05.o: .\Code\inc\lib1wire.h
-.\objects\libhc05.o: .\Code\inc\libDMA.h
-.\objects\libhc05.o: .\FreeRTOS\inc\FreeRTOS.h
-.\objects\libhc05.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\libhc05.o: .\Code\inc\FreeRTOSConfig.h
-.\objects\libhc05.o: .\FreeRTOS\inc\projdefs.h
-.\objects\libhc05.o: .\FreeRTOS\inc\portable.h
-.\objects\libhc05.o: .\FreeRTOS\inc\deprecated_definitions.h
-.\objects\libhc05.o: .\FreeRTOS\inc\portmacro.h
-.\objects\libhc05.o: .\FreeRTOS\inc\mpu_wrappers.h
-.\objects\libhc05.o: .\FreeRTOS\inc\task.h
-.\objects\libhc05.o: .\FreeRTOS\inc\list.h
-.\objects\libhc05.o: .\FreeRTOS\inc\queue.h

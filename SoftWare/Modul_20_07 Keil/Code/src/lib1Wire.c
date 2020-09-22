@@ -4,13 +4,16 @@
 extern uint8_t buf_DS18B20_USART1_DMA1_tx[8];
 extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 
+extern uint8_t buf_iButton_USART3_DMA1_tx[8];
+extern uint8_t buf_iButton_USART3_DMA1_rx[8];
+
 
 int16_t Tx16 = 0; 								// результат измерения - двухбайтовое целое со знаком,
-																	// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
-																	
+																	// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)																	
 uint8_t t_integer_current = 0; 		// переменная для сохранения текущего значения температуры
 int64_t i_button_serial_num = 0; 	// полученный серийный номер ключа i-button
 char t_buffer_char[] = {0};				// массив для символьного значения температуры
+uint16_t openLockTime = 5000;			// время открытия замка (соленоид)
 
 const uint16_t pow10Table2_16[] =
 	{
@@ -105,14 +108,14 @@ uint8_t OW_Reset(uint8_t num_usart) {
 
 	uint8_t ow_presence;
 	
-	if (num_usart == 1) {															// USART1
+	if (num_usart == usart1_DS18B20) {								// USART1
 
 		change_speed_USART1(9600);
 		USART1_Send_Char(0xf0);
 		
-		while (!(USART1->SR & USART_SR_TC))	{}
+		while (!(USART1 -> SR & USART_SR_TC))	{}
 		
-		ow_presence = USART1->DR;
+		ow_presence = USART1 -> DR;
 		change_speed_USART1(115200);
 	}
 	else if (num_usart == 3) {												// USART3
@@ -159,21 +162,31 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 
 	while (cLen > 0)
 	{
-		OW_toBits(*command, buf_DS18B20_USART1_DMA1_tx);
+		if (numUsart == usart1_DS18B20) {
+			OW_toBits(*command, buf_DS18B20_USART1_DMA1_tx);
+		}
+		else if (numUsart == usart3_iButton) {
+			OW_toBits(*command, buf_iButton_USART3_DMA1_tx);
+		}
 		command++;
 		cLen--;
 
-		if (numUsart == 1) {
+		if (numUsart == usart1_DS18B20) {
 			Exchange_DMA1_USART1();										// обмен DMA1 - USART1 - DMA1
 		}
-		else if (numUsart == 3) {
+		else if (numUsart == usart3_iButton) {
 			Exchange_DMA1_USART3();										// обмен DMA1 - USART3 - DMA1
 		}
 		
 
 		if (readStart == 0 && dLen > 0)
 		{
-			*data = OW_toByte(buf_DS18B20_USART1_DMA1_rx);
+			if (numUsart == usart1_DS18B20) {
+				*data = OW_toByte(buf_DS18B20_USART1_DMA1_rx);
+			}
+			else if (numUsart == usart3_iButton) {
+				*data = OW_toByte(buf_iButton_USART3_DMA1_rx);
+			}
 			data++;
 			dLen--;
 		}
@@ -203,8 +216,6 @@ void temp_measure_request(void) {
 		// если не изменилось - не отправлять
 		if (t_integer_current != t_integer_new) {
 			
-			// поменять текущее значение на новое
-			t_integer_current = t_integer_new;
 			// преобразовать из цифровых в символьные значения
 			utoa_cycle_sub(t_integer_new, t_buffer_char);
 
@@ -212,16 +223,23 @@ void temp_measure_request(void) {
 				USART2_Send_String("Temperuture");
 				USART2_Send_Char('\n');
 				USART2_Send_String(" on request ");
-			}
-			else			
-				USART2_Send_String("temp ");
-			
-			USART2_Send_String(t_buffer_char);
+				USART2_Send_String(t_buffer_char);
+				USART2_Send_Char(0xD);
+				USART2_Send_Char(0xA);
+				
+				vTaskDelay(3000);
 
-			USART2_Send_Char(0xD); // возврат каретки (carriage return, CR) — 0x0D, '\r'
-			USART2_Send_Char(0xA); // перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+				t_integer_current = 1;		
+			}
+			else {
+				USART2_Send_String("temp ");
+				USART2_Send_String(t_buffer_char);
+				USART2_Send_Char(0xD); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
+				USART2_Send_Char(0xA); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+			}
 			
-			t_integer_current = t_integer_new;																										// обновить значение температуры
+		// обновить текущее значение
+			t_integer_current = t_integer_new;																		// обновить значение температуры
 		}
 }
 
@@ -232,9 +250,9 @@ void i_Button(void)	{
 	
 	if (i_button_serial_num == Key_iButton_1 || i_button_serial_num == Key_iButton_2) {
 	
-		GPIOC -> BSRR |= GPIO_BSRR_BR13;
-		vTaskDelay(1000);
-		GPIOC -> BSRR |= GPIO_BSRR_BS13;
+		GPIOB -> BSRR |= GPIO_BSRR_BS12;									// open the lock (on solenoid coil - 1)
+		vTaskDelay(openLockTime);
+		GPIOB -> BSRR |= GPIO_BSRR_BR12;									// close the lock (on solenoid coil - 0)
 		
 		i_button_serial_num = 0;
 	 }

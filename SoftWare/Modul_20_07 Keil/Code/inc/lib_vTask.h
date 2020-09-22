@@ -5,16 +5,15 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "lib1Wire.h"
-#include "libHc05.h"
 #include "libExit.h"
-
+#include "sysInit.h"
 
 
 /************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
 	void vTaskUSART2_IRQHandlerAndroid (void *argument);
 	
-/**************** задача - обработка внешнего прерывания на PA9 от iButton *****************/
-	void vTaskEXTI9_5_IRQHandler (void *argument);
+/**************** задача - обработка внешнего прерывания на PB10 от iButton *****************/
+	void vTaskEXTI10_IRQHandler (void *argument);
 	
 /********** задача - вызов различных функций через определённый промежуток времени **********/
 	void vTaskPeriodicFunctionCall (void *argument);

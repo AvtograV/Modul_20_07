@@ -33,6 +33,9 @@ void RCC_Init (void){
 
 /*******************************************************************************************************/
 void GPIO_Init (void) {
-	RCC -> APB2ENR |= RCC_APB2ENR_IOPCEN;
-	GPIOC -> CRH |= GPIO_CRH_MODE13_0;
+	
+	RCC -> APB2ENR |= RCC_APB2ENR_IOPBEN;
+
+	GPIOB -> CRH &= ~GPIO_CRH_CNF12;
+	GPIOB -> CRH |= GPIO_CRH_MODE12_0;
 }
