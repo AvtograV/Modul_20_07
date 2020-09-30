@@ -33,7 +33,7 @@ import static android.R.layout.simple_list_item_1;
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     ToggleButton tb1, tb2, tb3, tb4;
-    TextView textTemp;
+    TextView textTemp, textMQ135;
     Group groupToggleButton;
     private static final int REQUEST_ENABLE_BT = 1;
     public TextView textInfo;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         setContentView(R.layout.activity_main);
 
         textTemp = findViewById(R.id.textTemperature);
+        textMQ135 = findViewById(R.id.textMQ_135);
 
         tb1 = findViewById(R.id.toggle_button_1);
         tb2 = findViewById(R.id.toggle_button_2);
@@ -204,11 +205,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         // открываем панель с кнопками
                         groupToggleButton.setVisibility(View.VISIBLE);
                         textTemp.setText("Измерение" + "\n" + "температуры");
+                        textMQ135.setText("Измерение" + "\n" + "содержания СO2");
 
                         if (myThreadConnected != null) {
-                            if (textTemp.getText() == "Измерение" + "\n" + "температуры") {
-
-                                // запрос на измерение температуры
+                            if (textTemp.getText() == "Измерение" + "\n" + "температуры"
+                                    || textMQ135.getText() == "Измерение" + "\n" + "содержания СO2") {
+                                // отправить запрос на измерение температуры
                                 byte[] bytesToSend = "r".getBytes();
                                 myThreadConnected.write(bytesToSend);
                             }
@@ -290,45 +292,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             public void run() {
                                 if (sbprint.contains("temp")) {
                                     textTemp.setText(sbprint + "\u00B0");
-                                } else if (sbprint.contains("request")) {
-                                    textTemp.setText(sbprint + "\u00B0");
-                                    Toast.makeText(MainActivity.this, "Температура по запросу", Toast.LENGTH_SHORT).show();
+                                } else if (sbprint.contains("MQ135")) {
+                                    textMQ135.setText(sbprint);
                                 } else {
                                     switch (sbprint) {
 
-                                        case "iButton":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
                                         case "D10 ON":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
 
                                         case "D10 OFF":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
-                                        case "D11 ON":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
-                                        case "D11 OFF":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
-                                        case "D12 ON":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
-                                        case "D12 OFF":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
-                                        case "D13 ON":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
-                                            break;
-
-                                        case "D13 OFF":
                                             Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
                                             break;
 

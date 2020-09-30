@@ -19,3 +19,4 @@
 .\objects\libexti.o: .\FreeRTOS\inc\task.h
 .\objects\libexti.o: .\FreeRTOS\inc\list.h
 .\objects\libexti.o: .\FreeRTOS\inc\queue.h
+.\objects\libexti.o: .\Code\inc\libADC.h

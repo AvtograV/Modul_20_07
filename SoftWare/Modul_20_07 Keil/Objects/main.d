@@ -20,6 +20,7 @@
 .\objects\main.o: .\Code\inc\lib1wire.h
 .\objects\main.o: .\Code\inc\libDMA.h
 .\objects\main.o: .\Code\inc\libUART.h
+.\objects\main.o: .\Code\inc\libADC.h
 .\objects\main.o: .\Code\inc\libPWM.h
 .\objects\main.o: .\Code\inc\lib_vTask.h
 .\objects\main.o: .\Code\inc\libExit.h

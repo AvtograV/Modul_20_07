@@ -18,6 +18,8 @@
 .\objects\lib_vtask.o: .\Code\inc\libDMA.h
 .\objects\lib_vtask.o: .\Code\inc\libUART.h
 .\objects\lib_vtask.o: .\Code\inc\lib1wire.h
+.\objects\lib_vtask.o: .\Code\inc\libADC.h
+.\objects\lib_vtask.o: .\Code\inc\libUART.h
 .\objects\lib_vtask.o: .\FreeRTOS\inc\queue.h
 .\objects\lib_vtask.o: .\Code\inc\libExit.h
 .\objects\lib_vtask.o: .\Code\inc\sysInit.h

@@ -12,5 +12,6 @@
  #include "libDMA.h"
  #include "lib_vTask.h"
  #include "libExit.h"
+ #include "libADC.h"
 
 /************************************************** Defines *******************************************************************/

@@ -1,7 +1,8 @@
 #include "lib_vTask.h"
 
 extern uint8_t flag_EXTI_PB10;
-const uint32_t valueDelay = 100;
+const uint32_t valueDelayLong = 1000;
+const uint32_t valueDelayShort = 100;
 
 
 	/************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
@@ -26,7 +27,9 @@ const uint32_t valueDelay = 100;
 	/********** задача - вызов различных функций через определённый промежуток времени **********/
 	void vTaskPeriodicFunctionCall (void *argument) {
 		while(1) {
-			temp_measure_request();			
-			vTaskDelay(valueDelay);
+			temp_measure_request();
+			
+			MQ135_measure_request();
+
 	}
 }

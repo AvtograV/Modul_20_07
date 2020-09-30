@@ -3,6 +3,7 @@
 
 #include "stm32f10x.h"
 #include "lib1wire.h"
+#include "libADC.h"
 
 #define FCKL_APB2 72000000								// for USART1
 #define FCKL_APB1 36000000								// for USART2 and USART3

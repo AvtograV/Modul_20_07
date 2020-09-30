@@ -127,10 +127,12 @@ void USART2_IRQHandler(void) {
 					USART2_Send_Char(0xD);
 					USART2_Send_Char(0xA);
 				}
-			else if (USART2 -> DR == 'r') {					// запрос температуры сразу после подключения по Bluetooth
+			else if (USART2 -> DR == 'r') {					// запрос температуры и СО2 сразу после подключения по Bluetooth
 					
-				t_integer_current = 0;
+				t_integer_current = 255;
 				temp_measure_request();
+				
+				MQ135_measure_request();
 				}
 		}
 }

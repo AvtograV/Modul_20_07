@@ -4,8 +4,9 @@
 int main(void){
 	
 	RCC_Init();
-	InitEXTI_PB10 ();
+	InitEXTI_PB10();
 	GPIO_Init();
+	Init_ADC1_MQ135();
 	
 	Init_USART1_DS18B20();
 	Init_USART2_HC_05();

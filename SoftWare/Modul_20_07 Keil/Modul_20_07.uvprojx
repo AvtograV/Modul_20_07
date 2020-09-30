@@ -493,6 +493,11 @@
               <FilePath>.\Code\src\libExti.c</FilePath>
             </File>
             <File>
+              <FileName>libADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Code\src\libADC.c</FilePath>
+            </File>
+            <File>
               <FileName>Item.txt</FileName>
               <FileType>5</FileType>
               <FilePath>.\Code\Item.txt</FilePath>

@@ -18,3 +18,4 @@
 .\objects\libuart.o: .\FreeRTOS\inc\task.h
 .\objects\libuart.o: .\FreeRTOS\inc\list.h
 .\objects\libuart.o: .\FreeRTOS\inc\queue.h
+.\objects\libuart.o: .\Code\inc\libADC.h

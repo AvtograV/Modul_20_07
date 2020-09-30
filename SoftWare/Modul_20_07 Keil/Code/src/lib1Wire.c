@@ -214,29 +214,15 @@ void temp_measure_request(void) {
 	
 		// проверить - если значение температуры изменилось - отправить новое значение
 		// если не изменилось - не отправлять
-		if (t_integer_current != t_integer_new) {
+		if (t_integer_current != t_integer_new || t_integer_current == 255) {
 			
 			// преобразовать из цифровых в символьные значения
 			utoa_cycle_sub(t_integer_new, t_buffer_char);
-
-			if (t_integer_current == 0) {
-				USART2_Send_String("Temperuture");
-				USART2_Send_Char('\n');
-				USART2_Send_String(" on request ");
-				USART2_Send_String(t_buffer_char);
-				USART2_Send_Char(0xD);
-				USART2_Send_Char(0xA);
-				
-				vTaskDelay(3000);
-
-				t_integer_current = 1;		
-			}
-			else {
-				USART2_Send_String("temp ");
-				USART2_Send_String(t_buffer_char);
-				USART2_Send_Char(0xD); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
-				USART2_Send_Char(0xA); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'
-			}
+			
+			USART2_Send_String("temp ");
+			USART2_Send_String(t_buffer_char);
+			USART2_Send_Char(0xD); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
+			USART2_Send_Char(0xA); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'			
 			
 		// обновить текущее значение
 			t_integer_current = t_integer_new;																		// обновить значение температуры
