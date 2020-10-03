@@ -1,6 +1,7 @@
 #include "libUART.h"
 
 extern uint8_t t_integer_current;								// переменная для сохранения текущего значения температуры
+extern uint16_t number_of_measurements_MQ;			// кол-во измерений (выборка) для MQ
 
 
 /******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20 *******************/
@@ -132,7 +133,7 @@ void USART2_IRQHandler(void) {
 				t_integer_current = 255;
 				temp_measure_request();
 				
-				MQ135_measure_request();
+				measure_and_send_result_MQ_135(number_of_measurements_MQ);
 				}
 		}
 }

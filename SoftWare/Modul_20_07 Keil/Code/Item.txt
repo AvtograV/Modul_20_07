@@ -1,5 +1,3 @@
-	
-
 	RCC -> APB2ENR |= RCC_APB2ENR_IOPBEN;	
 	GPIOB -> CRH |= GPIO_CRH_MODE10_0;
 	
@@ -8,3 +6,42 @@
 	GPIOB->BSRR |= GPIO_BSRR_BR10;
 	vTaskDelay(valueDelay);
 	
+	
+	
+/*			 if (MQ135_res > 0  	&& MQ135_res <= 1040) utoa_cycle_sub(1, MQ135_buffer);
+	else if (MQ135_res > 1040 && MQ135_res <= 1380)	utoa_cycle_sub(2, MQ135_buffer);
+	else if (MQ135_res > 1380 && MQ135_res <= 1720)	utoa_cycle_sub(3, MQ135_buffer);
+	else if (MQ135_res > 1720 && MQ135_res <= 2060)	utoa_cycle_sub(4, MQ135_buffer);
+	else if (MQ135_res > 2060 && MQ135_res <= 2400)	utoa_cycle_sub(5, MQ135_buffer);
+	else if (MQ135_res > 2400 && MQ135_res <= 2740)	utoa_cycle_sub(6, MQ135_buffer);
+	else if (MQ135_res > 2740 && MQ135_res <= 3080)	utoa_cycle_sub(7, MQ135_buffer);
+	else if (MQ135_res > 3080 && MQ135_res <= 3420)	utoa_cycle_sub(8, MQ135_buffer);
+	else if (MQ135_res > 3420 && MQ135_res <= 3760)	utoa_cycle_sub(9, MQ135_buffer);
+	else if (MQ135_res > 3760 && MQ135_res <= 4000)	utoa_cycle_sub(10, MQ135_buffer);	*/		
+		
+	
+	
+											HC-05(master):	
++NAME:STM32F407VG
++ADDR:14:3:536f9
++IAC:9e8b33
++ROLE:1
++PSWD:2007
++UART:38400,0,0
++CMOD:0
++IPSCAN:1024,512,1024,512
++SENM:0,0									режим секретности: 0- выключен, режим шифрования: 0 - без шифрования
+
+	
+	
+											HC-05(slave):	
++NAME:STM32F103C8
++ADDR:14:3:5318e
++IAC:9e8b33
++ROLE:0
++PSWD:2007
++UART:38400,1,0
++CMOD:1										режим подключения: 1 - модуль в роли ведущего подключается к любому ведомому Bluetooth устройству
++IPSCAN:1024,512,1024,512					запрос параметров IP сканирования: 1024 - интервал сканирования, 512 - продолжительность сканирования,
+											1024 - интервал страниц, 512 - количество страниц
++SENM:0,0

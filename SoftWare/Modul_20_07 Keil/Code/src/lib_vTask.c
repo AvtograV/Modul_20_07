@@ -1,8 +1,9 @@
 #include "lib_vTask.h"
 
 extern uint8_t flag_EXTI_PB10;
-const uint32_t valueDelayLong = 1000;
-const uint32_t valueDelayShort = 100;
+extern uint8_t t_integer_current;
+const uint16_t valueDelay = 1000;
+const uint8_t number_of_measurements_MQ = 100;									// кол-во измерений (выборка) для MQ
 
 
 	/************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
@@ -26,10 +27,9 @@ const uint32_t valueDelayShort = 100;
 	
 	/********** задача - вызов различных функций через определённый промежуток времени **********/
 	void vTaskPeriodicFunctionCall (void *argument) {
-		while(1) {
+		while(1) {			
 			temp_measure_request();
 			
-			MQ135_measure_request();
-
+			measure_and_send_result_MQ_135(number_of_measurements_MQ);
 	}
 }

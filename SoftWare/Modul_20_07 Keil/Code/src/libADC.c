@@ -3,17 +3,12 @@
 
 uint16_t MQ135_res = 0;
 char MQ135_buffer[] = {0};
+uint16_t sum_of_measurements_MQ;
+
+const uint16_t  pow10Table16[] = {100ul, 10ul, 1ul};
 
 
-const uint16_t  pow10Table16[]=
-{
-    10000ul,
-    1000ul,
-    100ul,
-    10ul,
-    1ul
-};
-
+/************* функция преобразование числового значения в символьное (3 знака) *************/
 static char *utoa_cycle_sub(uint16_t value, char *buffer) {
    if (value == 0)  {
       buffer[0] = '0';
@@ -35,7 +30,7 @@ static char *utoa_cycle_sub(uint16_t value, char *buffer) {
      *ptr++ = count + '0';
    }
 	 
-		while(i < 5);
+		while(i < 3);
 			*ptr = 0;	 
 																					// удаляем ведущие нули
    while(buffer[0] == '0') ++buffer;
@@ -43,7 +38,7 @@ static char *utoa_cycle_sub(uint16_t value, char *buffer) {
 }
 
 
-/****************************** PA1 **********************************/
+/****************************************** PA1 *********************************************/
 void Init_ADC1_MQ135 (void) {
 	
   RCC -> APB2ENR |= RCC_APB2ENR_IOPAEN ; 										// тактирования порта A
@@ -73,19 +68,44 @@ void Init_ADC1_MQ135 (void) {
 																														//  преобразования регулярной группы ADC1
 }
 
-/************ измерить CO2 (MQ-135) и отправить в приложение Android ***********/
-	
-	void MQ135_measure_request(void) {
-		
-				ADC1 -> CR2 |= ADC_CR2_SWSTART;								// запуск преобразований
-        while (!(ADC1 -> SR & ADC_SR_EOC));						// ждем пока преобразование завершится
 
-				MQ135_res = ADC1 -> DR;
+/*********************************** измерить CO2 (MQ-135) **********************************/	
+uint16_t MQ135_measure_request(void) {
 		
-				utoa_cycle_sub(MQ135_res, MQ135_buffer);
-				
-				USART2_Send_String("MQ135 ");
-				USART2_Send_String(MQ135_buffer);
-				USART2_Send_Char(0xD); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
-				USART2_Send_Char(0xA); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'
+	ADC1 -> CR2 |= ADC_CR2_SWSTART;								// запуск преобразований
+		while (!(ADC1 -> SR & ADC_SR_EOC));					// ждем пока преобразование завершится
+		
+	return ADC1 -> DR;
+}
+
+/************ функция нахождения среднего арифметического числа измерения MQ-135 ************/
+uint16_t arithmetic_mean_number(uint8_t num_of_measur) {
+	sum_of_measurements_MQ = 0;
+	
+	if (num_of_measur != 0) {
+		for (uint8_t i = 0; i < num_of_measur; i++) {
+			
+			sum_of_measurements_MQ += MQ135_measure_request();
+			
+			vTaskDelay(10);
+		}
+	}
+	
+	return sum_of_measurements_MQ /= num_of_measur;
+}
+
+
+/**** измерить некое кол-во раз (number_of_measurements_MQ) MQ-135 и отправить по USART *****/
+void measure_and_send_result_MQ_135 (uint16_t number_of_measurements) {	
+	MQ135_res = 0;
+	
+	MQ135_res = arithmetic_mean_number(number_of_measurements);
+	
+	utoa_cycle_sub(MQ135_res, MQ135_buffer);			// преобразование из числового в символьнное значение
+
+	USART2_Send_String("MQ135 ");
+	USART2_Send_String(MQ135_buffer);
+	
+	USART2_Send_Char(0xD);												// необходимое окончание 
+	USART2_Send_Char(0xA);												// при передаче по bluetooth
 }
