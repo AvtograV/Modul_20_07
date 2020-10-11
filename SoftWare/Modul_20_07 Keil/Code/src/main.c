@@ -6,10 +6,11 @@ int main(void){
 	RCC_Init();
 	InitEXTI_PB10();
 	GPIO_Init();
+	
 	Init_ADC1_MQ135();
 	
 	Init_USART1_DS18B20();
-	Init_USART2_HC_05();
+	Init_USART2_HC05_and_SIM900();
 	Init_USART3_iButton();
 	
 	Init_DMA1_USART1_TX();																	// DS18B20

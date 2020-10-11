@@ -5,7 +5,7 @@ uint16_t MQ135_res = 0;
 char MQ135_buffer[] = {0};
 uint16_t sum_of_measurements_MQ;
 
-const uint16_t  pow10Table16[] = {100ul, 10ul, 1ul};
+const uint16_t  pow10Table16[] = {1000ul, 100ul, 10ul, 1ul};
 
 
 /************* функция преобразование числового значения в символьное (3 знака) *************/
@@ -28,23 +28,24 @@ static char *utoa_cycle_sub(uint16_t value, char *buffer) {
          value -= pow10;
       }			
      *ptr++ = count + '0';
-   }
-	 
-		while(i < 3);
-			*ptr = 0;	 
+   }	 
+		
+	 while(i < 4);
+			*ptr = 0; 
 																					// удаляем ведущие нули
    while(buffer[0] == '0') ++buffer;
+	 
    return buffer;
 }
 
 
-/****************************************** PA1 *********************************************/
+/****************************************** PA5 *********************************************/
 void Init_ADC1_MQ135 (void) {
 	
   RCC -> APB2ENR |= RCC_APB2ENR_IOPAEN ; 										// тактирования порта A
 	RCC -> APB2ENR |= RCC_APB2ENR_ADC1EN; 										// тактирование модуля ADC1
 
-	GPIOA -> CRL &= ~ (GPIO_CRL_MODE1 | GPIO_CRL_CNF1); 			// PA1 - аналоговый вход
+	GPIOA -> CRL &= ~ (GPIO_CRL_MODE5 | GPIO_CRL_CNF5); 			// PA5 - аналоговый вход
 	
 	RCC -> CFGR |= RCC_CFGR_ADCPRE_DIV6;											// PCLK2 divided by 6
 	
@@ -64,7 +65,7 @@ void Init_ADC1_MQ135 (void) {
 	ADC1 -> SQR1 &= ~ADC_SQR1_L;															// количество каналов для преобразования 
 																														// в регулярной группе ADC1 (0000) - один канал
 	
-	ADC1 -> SQR3 |= ADC_SQR3_SQ1_0;														// (PA1) - номер канала (первый канал) первого
+	ADC1 -> SQR3 |= ADC_SQR3_SQ1_4;														// (PA5) - номер канала (пятый канал) первого
 																														//  преобразования регулярной группы ADC1
 }
 
@@ -78,7 +79,7 @@ uint16_t MQ135_measure_request(void) {
 	return ADC1 -> DR;
 }
 
-/************ функция нахождения среднего арифметического числа измерения MQ-135 ************/
+/************ функция нахождения среднего арифметического числа измерений MQ-135 ************/
 uint16_t arithmetic_mean_number(uint8_t num_of_measur) {
 	sum_of_measurements_MQ = 0;
 	

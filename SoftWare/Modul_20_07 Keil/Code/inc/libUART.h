@@ -5,12 +5,14 @@
 #include "lib1wire.h"
 #include "libADC.h"
 
-#define FCKL_APB2 72000000								// for USART1
-#define FCKL_APB1 36000000								// for USART2 and USART3
+#define FCKL_APB2 															72000000					// for USART1
+#define FCKL_APB1 															36000000					// for USART2 and USART3
 
-#define BAUDRATE_USART1 9600
-#define BAUDRATE_USART2 38400
-#define BAUDRATE_USART3 9600
+#define BAUDRATE_USART1 												9600
+#define BAUDRATE_USART2 												38400
+#define BAUDRATE_USART3 												9600
+
+#define size_buffer_reseive_USART2							50
 
 /*********************** USART1 (PA9 (Single Wire (Half-Duplex) *************************/
 void Init_USART1_DS18B20(void);
@@ -22,8 +24,8 @@ void USART1_Send_String(char *str);
 void change_speed_USART1(uint32_t set_speed);
 
 
-/****************************** USART2 (PA2 - TX, PA3 - RX) *****************************/
-void Init_USART2_HC_05(void);
+/******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
+void Init_USART2_HC05_and_SIM900(void);
 /******************************* отправить байт по USART2 *******************************/
 void USART2_Send_Char(char chr);
 /****************************** отправить строку по USART2 ******************************/

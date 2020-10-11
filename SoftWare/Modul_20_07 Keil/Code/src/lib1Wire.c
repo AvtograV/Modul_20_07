@@ -7,16 +7,20 @@ extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 extern uint8_t buf_iButton_USART3_DMA1_tx[8];
 extern uint8_t buf_iButton_USART3_DMA1_rx[8];
 
-
-int16_t Tx16 = 0; 																					// результат измерения - двухбайтовое целое со знаком,
-																														// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
+int16_t Tx16 = 0; 																										// результат измерения - двухбайтовое целое со знаком,
+																																			// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
 																	
-uint8_t t_integer_current = 0; 															// переменная для сохранения текущего значения температуры
-int64_t i_button_serial_num = 0; 														// полученный серийный номер ключа i-button
-char t_buffer_char[] = {0};																	// массив для символьного значения температуры
-uint16_t openLockTime = 5000;																// время открытия замка (соленоид)
+uint8_t t_integer_current = 0; 																				// переменная для сохранения текущего значения температуры
+int64_t i_button_serial_num = 0; 																			// полученный серийный номер ключа i-button
+char t_buffer_char[] = {0};																						// массив для символьного значения температуры
+uint16_t openLockTime = 5000;																					// время открытия замка (соленоид)
 
 const uint16_t pow10Table2_16[] = {10ul, 1ul};
+
+char ROM[] = {0x28, 0xff, 0x37, 0x7d, 0x33, 0x17, 0x04, 0x71};				// 0x28 - family code (DS18B20)
+																																			// 0xff, 0x37, 0x7d, 0x33, 0x17, 0x04 - ROM CODE (in reverse order)
+																																			// 0x71 - CRC
+char ROM_2 [] = {0x28, 0xff, 0x43, 0xba, 0x32, 0x17, 0x03, 0x94};
 	
 
 /************* функция преобразование числового значения в символьное (2 знака) *************/
@@ -55,11 +59,11 @@ char *utoa_cycle_sub(uint16_t value, char *buffer)
 	return buffer;
 }
 
-/******************************************************************************/
+/********************************************************************************************/
 // функция преобразует один байт в восемь, для передачи через USART
 // ow_byte - байт, который надо преобразовать
 // ow_bits - ссылка на буфер, размером не менее 8 байт
-/******************************************************************************/
+/********************************************************************************************/
 void OW_toBits(uint8_t ow_byte, uint8_t *ow_bits)
 {
 	uint8_t i;
@@ -78,10 +82,10 @@ void OW_toBits(uint8_t ow_byte, uint8_t *ow_bits)
 	}
 }
 
-/******************************************************************************/
+/********************************************************************************************/
 // обратное преобразование - из того, что получено через USART опять собирается байт
 // ow_bits - ссылка на буфер, размером не менее 8 байт
-/******************************************************************************/
+/********************************************************************************************/
 uint8_t OW_toByte(uint8_t *ow_bits)
 {
 	uint8_t ow_byte, i;
@@ -98,9 +102,9 @@ uint8_t OW_toByte(uint8_t *ow_bits)
 	return ow_byte; // возвращаем полученный байт
 }
 
-/******************************************************************************/
+/********************************************************************************************/
 // осуществляет сброс и проверку на наличие устройств на шине
-/******************************************************************************/
+/********************************************************************************************/
 uint8_t OW_Reset(uint8_t num_usart) {
 
 	uint8_t ow_presence;
@@ -133,9 +137,9 @@ uint8_t OW_Reset(uint8_t num_usart) {
 	return OW_NO_DEVICE;
 }
 
-/************************* приём - передача по 1-wire *************************/
+/******************************** приём - передача по 1-wire ********************************/
 //	процедура общения с шиной 1-wire
-/******************************************************************************/
+/********************************************************************************************/
 
 uint8_t OW_Send(	   // ниже указанны аргументы функции OW_Send ()	
 	uint8_t sendReset, // sendReset - посылать RESET в начале общения
@@ -157,16 +161,17 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 		}
 	}
 
-	while (cLen > 0)
-	{
+	while (cLen > 0) {
+		
 		if (numUsart == usart1_DS18B20) {
 			OW_toBits(*command, buf_DS18B20_USART1_DMA1_tx);
 		}
 		else if (numUsart == usart3_iButton) {
 			OW_toBits(*command, buf_iButton_USART3_DMA1_tx);
 		}
-		command++;
-		cLen--;
+		
+	command++;
+	cLen--;
 
 		if (numUsart == usart1_DS18B20) {
 			Exchange_DMA1_USART1();										// обмен DMA1 - USART1 - DMA1
@@ -176,8 +181,8 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 		}
 		
 
-		if (readStart == 0 && dLen > 0)
-		{
+		if (readStart == 0 && dLen > 0)	{
+			
 			if (numUsart == usart1_DS18B20) {
 				*data = OW_toByte(buf_DS18B20_USART1_DMA1_rx);
 			}
@@ -199,12 +204,18 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 }
 
 
-/************ измерить температуру и отправить в приложение Android ***********/
-void temp_measure_request(void) {
+/******************* измерить температуру и отправить в приложение Android ******************/
+void temp_measure_request(char *ROM_DS18B20) {
 		
-		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\xcc\x44", 2, 0, 0, OW_NO_READ); 									// SKIP ROM, CONVERT T	
+		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\x55", 1, 0, 0, OW_NO_READ);														// MATCH ROM
+		OW_Send(OW_NO_RESET, usart1_DS18B20, ROM_DS18B20, 8, 0, 0, OW_NO_READ);	
+		OW_Send(OW_NO_RESET, usart1_DS18B20, "\x44", 1, 0, 0, OW_NO_READ); 															// CONVERT T	
+	
 		vTaskDelay(1000);
-		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\xcc\xbe\xff\xff", 4, (uint8_t *)&Tx16, 2, 2); 		// SKIP ROM, READ SCRATCHPAD
+	
+		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\x55", 1, 0, 0, OW_NO_READ);
+		OW_Send(OW_NO_RESET, usart1_DS18B20, ROM_DS18B20, 8, 0, 0, OW_NO_READ);
+		OW_Send(OW_NO_RESET, usart1_DS18B20, "\xbe\xff\xff", 3, (uint8_t *)&Tx16, 2, 2);								// READ SCRATCHPAD
 		
 		// разделить полученное значение на 16
 		uint8_t t_integer_new = Tx16 >> 4;
@@ -226,7 +237,8 @@ void temp_measure_request(void) {
 		}
 }
 
-/********************* система контроля доступа IBUTTON ***********************/	
+
+/**************************** система контроля доступа IBUTTON ******************************/	
 void i_Button(void)	{
 	
 	OW_Send(OW_SEND_RESET, usart3_iButton, "\x33\xff\xff\xff\xff\xff\xff\xff\xff", 9, (uint8_t *)&i_button_serial_num, 6, 2);
@@ -239,4 +251,10 @@ void i_Button(void)	{
 		
 		i_button_serial_num = 0;
 	 }
+}
+
+
+/*********************************** прочитать ROM DS18B20 **********************************/
+void read_ROM_DS18B20(void) {
+ OW_Send(OW_SEND_RESET, usart1_DS18B20, "\x33\xff\xff\xff\xff\xff\xff\xff\xff", 9, (uint8_t *)&i_button_serial_num, 8, 0);		
 }

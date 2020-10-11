@@ -1,10 +1,14 @@
 #include "libUART.h"
 
-extern uint8_t t_integer_current;								// переменная для сохранения текущего значения температуры
-extern uint16_t number_of_measurements_MQ;			// кол-во измерений (выборка) для MQ
+extern uint8_t t_integer_current;															// переменная для сохранения текущего значения температуры
+extern uint16_t number_of_measurements_MQ;										// кол-во измерений (выборка) для MQ
+
+char buffer_RX_USART2 [size_buffer_reseive_USART2];
+
+extern char ROM[];
 
 
-/******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20 *******************/
+/******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20) *******************/
 void Init_USART1_DS18B20(void) {
 
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
@@ -61,9 +65,8 @@ void change_speed_USART1(uint32_t set_speed)
 
 
 
-/************************* USART2 (PA2 - TX, PA3 - RX) (HC-05) *************************/
-void Init_USART2_HC_05(void)
-{
+/******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
+void Init_USART2_HC05_and_SIM900(void) {
 
 	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 
@@ -87,20 +90,18 @@ void Init_USART2_HC_05(void)
 }
 
 
-/************************** отправить байт по USART2 (HC-05) ***************************/
-void USART2_Send_Char(char chr)
-{
+/******************** отправить байт по USART2 (HC-05 and SIM900) **********************/
+void USART2_Send_Char(char chr) {
 
-	while (!(USART2->SR & USART_SR_TC))
-		;
-	USART2->DR = chr;
+	while (!(USART2->SR & USART_SR_TC));
+	
+	USART2 -> DR = chr;
 }
 
 
-/************************* отправить строку по USART2 (HC-05) **************************/
-void USART2_Send_String(char *str)
-{
-
+/******************* отправить строку по USART2 (HC-05 and SIM900) *********************/
+void USART2_Send_String(char *str) {
+	
 	uint8_t i = 0;
 
 	while (str[i])
@@ -108,33 +109,47 @@ void USART2_Send_String(char *str)
 }
 
 
-/********************** принять байт от HC-05 по USART2 **********************/
+/******************** USART2 string reseption from HC-05 or SIM900 *********************/
+ void USART2_RX_Str (uint8_t* rx_dt) {
+	 
+	 uint8_t i_RX_USART2 = 0;
+	 
+	 if (USART2 -> SR & USART_SR_RXNE) {
+		 
+			 rx_dt[i_RX_USART2] = (uint8_t)(USART2 -> DR);
+			 i_RX_USART2++;
+	 }
+}
+
+
+/************************** SIM900 interrupt handler ***********************************/
 void USART2_IRQHandler(void) {
-	if (USART2 -> SR & USART_SR_RXNE) {
-			if (USART2 -> DR == 'a') {
-				GPIOB -> BSRR |= GPIO_BSRR_BS12;									// open the lock (on solenoid coil - 1)
-					USART2_Send_String("D12 ON");
-					USART2_Send_Char(0xD);
-					USART2_Send_Char(0xA);
-				}
-			else if (USART2 -> DR == 'A') {
-					USART2_Send_String("D12 OFF");
-				GPIOB -> BSRR |= GPIO_BSRR_BR12;									// close the lock (on solenoid coil - 0)
-					USART2_Send_Char(0xD);
-					USART2_Send_Char(0xA);
-				}
-			else if (USART2 -> DR == 'B') {
-					USART2_Send_String("D12 ON");
-					USART2_Send_Char(0xD);
-					USART2_Send_Char(0xA);
-				}
-			else if (USART2 -> DR == 'r') {					// запрос температуры и СО2 сразу после подключения по Bluetooth
+	
+	USART2_RX_Str ((uint8_t*) buffer_RX_USART2);				// прочитать принятую строку (символ) по USART2
+	
+	if (buffer_RX_USART2[0] == 'a') {
+		GPIOB -> BSRR |= GPIO_BSRR_BS12;									// open the lock (on solenoid coil - 1)		
+		USART2_Send_String("D12 ON");
+		USART2_Send_Char(0xD);
+		USART2_Send_Char(0xA);
+		}
+	else if (buffer_RX_USART2[0] == 'A') {
+		USART2_Send_String("D12 OFF");
+		GPIOB -> BSRR |= GPIO_BSRR_BR12;									// close the lock (on solenoid coil - 0)
+		USART2_Send_Char(0xD);
+		USART2_Send_Char(0xA);
+		}
+	else if (buffer_RX_USART2[0] == 'B') {
+		USART2_Send_String("D12 ON");
+		USART2_Send_Char(0xD);
+		USART2_Send_Char(0xA);
+		}
+	else if (buffer_RX_USART2[0] == 'r') {							// запрос температуры и СО2 сразу после подключения по Bluetooth
 					
-				t_integer_current = 255;
-				temp_measure_request();
+		t_integer_current = 255;
+		temp_measure_request(ROM);
 				
-				measure_and_send_result_MQ_135(number_of_measurements_MQ);
-				}
+		measure_and_send_result_MQ_135(number_of_measurements_MQ);
 		}
 }
 

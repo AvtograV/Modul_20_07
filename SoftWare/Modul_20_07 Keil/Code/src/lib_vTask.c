@@ -5,6 +5,8 @@ extern uint8_t t_integer_current;
 const uint16_t valueDelay = 1000;
 const uint8_t number_of_measurements_MQ = 100;									// кол-во измерений (выборка) для MQ
 
+extern char ROM[];
+extern char ROM_2 [];
 
 	/************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
 	void vTaskUSART2_IRQHandlerAndroid (void *argument) {
@@ -28,8 +30,11 @@ const uint8_t number_of_measurements_MQ = 100;									// кол-во измер
 	/********** задача - вызов различных функций через определённый промежуток времени **********/
 	void vTaskPeriodicFunctionCall (void *argument) {
 		while(1) {			
-			temp_measure_request();
+//			temp_measure_request(ROM);
 			
-			measure_and_send_result_MQ_135(number_of_measurements_MQ);
+//			measure_and_send_result_MQ_135(number_of_measurements_MQ);
+			
+			read_ROM_DS18B20();
+			vTaskDelay(3000);
 	}
 }
