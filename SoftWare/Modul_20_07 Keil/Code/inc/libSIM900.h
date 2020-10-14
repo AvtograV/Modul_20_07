@@ -8,7 +8,6 @@
 
 #define SMS_OK												1
 #define SMS_ERROR											0
-#define size_text_sms									50									// max size text sms
 
 
 #endif 			// LibSIM900_H

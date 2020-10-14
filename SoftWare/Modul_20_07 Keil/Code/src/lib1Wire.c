@@ -1,27 +1,26 @@
 #include "lib1Wire.h"
 
 
+const uint16_t openLockTime = 5000;																				// время открытия замка (соленоид)
+const uint16_t pow10Table2_16[] = {10ul, 1ul};
+
+const char ROM[] = {0x28, 0xff, 0x43, 0xba, 0x32, 0x17, 0x03, 0x94};
+const char ROM_2[] = {0x28, 0xff, 0x37, 0x7d, 0x33, 0x17, 0x04, 0x71};		// 0x28 - family code (DS18B20)
+																																					// 0xff, 0x37, 0x7d, 0x33, 0x17, 0x04 - ROM CODE (in reverse order)
+																																					// 0x71 - CRC
 extern uint8_t buf_DS18B20_USART1_DMA1_tx[8];
 extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 
 extern uint8_t buf_iButton_USART3_DMA1_tx[8];
 extern uint8_t buf_iButton_USART3_DMA1_rx[8];
 
-int16_t Tx16 = 0; 																										// результат измерения - двухбайтовое целое со знаком,
-																																			// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
-																	
-uint8_t t_integer_current = 0; 																				// переменная для сохранения текущего значения температуры
-int64_t i_button_serial_num = 0; 																			// полученный серийный номер ключа i-button
-char t_buffer_char[] = {0};																						// массив для символьного значения температуры
-uint16_t openLockTime = 5000;																					// время открытия замка (соленоид)
+uint8_t t_integer_current = 0; 																						// переменная для сохранения текущего значения температуры
+char t_buffer_char[] = {0};																								// массив для символьного значения температуры
+int16_t Tx16 = 0; 																												// результат измерения DS18B20 - двухбайтовое целое со знаком,
+																																					// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
 
-const uint16_t pow10Table2_16[] = {10ul, 1ul};
+int64_t i_button_serial_num = 0; 																					// полученный серийный номер ключа i-button
 
-char ROM[] = {0x28, 0xff, 0x37, 0x7d, 0x33, 0x17, 0x04, 0x71};				// 0x28 - family code (DS18B20)
-																																			// 0xff, 0x37, 0x7d, 0x33, 0x17, 0x04 - ROM CODE (in reverse order)
-																																			// 0x71 - CRC
-char ROM_2 [] = {0x28, 0xff, 0x43, 0xba, 0x32, 0x17, 0x03, 0x94};
-	
 
 /************* функция преобразование числового значения в символьное (2 знака) *************/
 char *utoa_cycle_sub(uint16_t value, char *buffer)
@@ -215,8 +214,8 @@ void temp_measure_request(char *ROM_DS18B20) {
 	
 		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\x55", 1, 0, 0, OW_NO_READ);
 		OW_Send(OW_NO_RESET, usart1_DS18B20, ROM_DS18B20, 8, 0, 0, OW_NO_READ);
-		OW_Send(OW_NO_RESET, usart1_DS18B20, "\xbe\xff\xff", 3, (uint8_t *)&Tx16, 2, 2);								// READ SCRATCHPAD
-		
+		OW_Send(OW_NO_RESET, usart1_DS18B20, "\xbe\xff\xff", 3, (uint8_t *)&Tx16, 2, 1);								// READ SCRATCHPAD
+	
 		// разделить полученное значение на 16
 		uint8_t t_integer_new = Tx16 >> 4;
 	

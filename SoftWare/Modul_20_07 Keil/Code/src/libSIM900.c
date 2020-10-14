@@ -1,17 +1,17 @@
 #include "libSIM900.h"
 
-
 /********************** pin 0 - TX, pin 1 - RX (to Arduino board) **********************/
 /******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
 
+const char sms_number_phone[] 	= "+79025623095";
+const char sms_number_phone_2[] = "+79676211100";
+const uint8_t size_text_sms = 50;																		// max size text sms
 
-char sms_number_phone [] = "+79676211100";
-char text_sms [size_text_sms] = {0};
-
+char text_sms [size_text_sms];
 extern char buffer_RX_USART2 [size_buffer_reseive_USART2];
 
 
-/******************* check SIM900 and send his status to USART *******************/
+/********************** check SIM900 and send his status to USART **********************/
 		void check_sim900 (void) {
 
 		USART2_Send_String("AT");												// send a SIM900 command
@@ -31,7 +31,7 @@ extern char buffer_RX_USART2 [size_buffer_reseive_USART2];
 	}
 
 
-/******************************* on/off module SIM900 ******************************/
+/********************************* on/off module SIM900 ********************************/
 void sim900_on (void) {
 	
 		GPIOA -> BSRR |= GPIO_BSRR_BS3;
@@ -42,7 +42,7 @@ void sim900_on (void) {
 }
 
 
-/****************************** send SMS with any text *****************************/
+/******************************** send SMS with any text *******************************/
 uint8_t send_sms (char* num_phone, char* send_text_sms) {
 
 	USART2_Send_String("AT");												// send a SIM900 command
