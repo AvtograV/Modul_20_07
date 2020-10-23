@@ -23,3 +23,4 @@
 .\objects\lib_vtask.o: .\FreeRTOS\inc\queue.h
 .\objects\lib_vtask.o: .\Code\inc\libExit.h
 .\objects\lib_vtask.o: .\Code\inc\sysInit.h
+.\objects\lib_vtask.o: .\Code\inc\libSIM900.h

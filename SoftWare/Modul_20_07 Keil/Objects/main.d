@@ -25,3 +25,4 @@
 .\objects\main.o: .\Code\inc\lib_vTask.h
 .\objects\main.o: .\Code\inc\libExit.h
 .\objects\main.o: .\Code\inc\sysInit.h
+.\objects\main.o: .\Code\inc\libSIM900.h

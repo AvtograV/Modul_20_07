@@ -4,13 +4,14 @@ const uint8_t number_of_measurements_MQ = 100;									// кол-во измер
 
 extern uint8_t flag_EXTI_PB10;
 extern uint8_t t_integer_current;
-extern char ROM[];
-extern char ROM_2 [];
 
-	/************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
-	void vTaskUSART2_IRQHandlerAndroid (void *argument) {
+extern char ROM[];
+extern char ROM_2[];
+
+	/******************************* задача - USART2_IRQHandler ********************************/
+	void vTaskUSART2_IRQHandler(void *argument) {
 		while(1) {
-			USART2_IRQHandler();
+			incomCall();
 		}
 	}
 	

@@ -3,9 +3,13 @@
 extern uint8_t t_integer_current;															// переменная для сохранения текущего значения температуры
 extern uint16_t number_of_measurements_MQ;										// кол-во измерений (выборка) для MQ
 
-char buffer_RX_USART2 [size_buffer_reseive_USART2];
-
 extern char ROM[];
+
+char buffer_RX_USART2 [size_buffer_reseive_USART2];
+uint8_t num_bit_RX_USART2 = 0;
+
+uint8_t FLAG_SIM900_STATUS = 0;
+uint8_t FLAG_HC05_STATUS = 0;
 
 
 /******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20) *******************/
@@ -109,50 +113,78 @@ void USART2_Send_String(char *str) {
 }
 
 
-/******************** USART2 string reseption from HC-05 or SIM900 *********************/
- void USART2_RX_Str (uint8_t* rx_dt) {
+/***************************************************************************************/
+uint8_t contains (char* str, char* sequence) {
+	 uint8_t num_of_coincidences = 0;
+	 uint8_t i = 0;
+	 uint8_t ii = 0;
 	 
-	 uint8_t i_RX_USART2 = 0;
-	 
-	 if (USART2 -> SR & USART_SR_RXNE) {
-		 
-			 rx_dt[i_RX_USART2] = (uint8_t)(USART2 -> DR);
-			 i_RX_USART2++;
-	 }
+	while (sequence[i] != 0) {
+		while (str[ii] != 0) {
+			if(sequence[i] == str[ii]) {				
+				num_of_coincidences++;				
+			}
+			ii++;
+		}
+		ii = 0;
+		i++;
+	}	
+	return (num_of_coincidences == i);
 }
 
 
 /************************** SIM900 interrupt handler ***********************************/
-void USART2_IRQHandler(void) {
-	
-	USART2_RX_Str ((uint8_t*) buffer_RX_USART2);				// прочитать принятую строку (символ) по USART2
-	
-	if (buffer_RX_USART2[0] == 'a') {
-		GPIOB -> BSRR |= GPIO_BSRR_BS12;									// open the lock (on solenoid coil - 1)		
-		USART2_Send_String("D12 ON");
-		USART2_Send_Char(0xD);
-		USART2_Send_Char(0xA);
-		}
-	else if (buffer_RX_USART2[0] == 'A') {
-		USART2_Send_String("D12 OFF");
-		GPIOB -> BSRR |= GPIO_BSRR_BR12;									// close the lock (on solenoid coil - 0)
-		USART2_Send_Char(0xD);
-		USART2_Send_Char(0xA);
-		}
-	else if (buffer_RX_USART2[0] == 'B') {
-		USART2_Send_String("D12 ON");
-		USART2_Send_Char(0xD);
-		USART2_Send_Char(0xA);
-		}
-	else if (buffer_RX_USART2[0] == 'r') {							// запрос температуры и СО2 сразу после подключения по Bluetooth
-					
-		t_integer_current = 255;
-		temp_measure_request(ROM);
-				
-		measure_and_send_result_MQ_135(number_of_measurements_MQ);
-		}
-}
+void USART2_IRQHandler (void) {
+	if (USART2 -> SR & USART_SR_RXNE)	{
+		
+	buffer_RX_USART2[num_bit_RX_USART2] = USART2 -> DR;											// записать каждый полученный бит в строку
+  num_bit_RX_USART2++;
+ 
+	if(buffer_RX_USART2[num_bit_RX_USART2 - 1] == '\r') {										// окончание строки
 
+		// Set FLAG_HC05_STATUS
+		if (contains (buffer_RX_USART2, "open")) {			
+			GPIOB -> BSRR |= GPIO_BSRR_BS12;																		// open the lock (on solenoid coil - 1)		
+			USART2_Send_String("D12 ON");
+			USART2_Send_Char(0xD);
+			USART2_Send_Char(0xA);
+		}
+		else if (contains (buffer_RX_USART2, "close")) {			
+			USART2_Send_String("D12 OFF");
+			GPIOB -> BSRR |= GPIO_BSRR_BR12;																		// close the lock (on solenoid coil - 0)
+			USART2_Send_Char(0xD);
+			USART2_Send_Char(0xA);
+		}
+		else if (contains (buffer_RX_USART2, "request")) {										// requist temp and СО2, after conected Bluetooth					
+			t_integer_current = 255;
+			temp_measure_request(ROM);				
+			measure_and_send_result_MQ_135(number_of_measurements_MQ);
+		}
+		
+		// Set FLAG_SIM900_STATUS
+		else if (contains (buffer_RX_USART2, "ERROR")) {
+			FLAG_SIM900_STATUS = 0;
+		}
+		else if (contains (buffer_RX_USART2, "OK")) {													// requist to SIM-900 (send "AT") or after sending SMS
+			FLAG_SIM900_STATUS = 1;
+		}
+		else if (contains (buffer_RX_USART2, ">")) {													// willingness to send SMS text
+			FLAG_SIM900_STATUS = 2;
+		}
+		else if (contains (buffer_RX_USART2, "RING")) {												// incom call
+			FLAG_SIM900_STATUS = 3;
+		}
+ 
+		// Clear buffer USART2 RX
+		for (uint8_t i = 0; i < size_buffer_reseive_USART2; i++) {
+			if (buffer_RX_USART2[i] != 0) {
+				buffer_RX_USART2[i] = 0;
+			}
+		}		
+		num_bit_RX_USART2 = 0;
+   }
+  }
+}
 
 /********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
 void Init_USART3_iButton(void) {

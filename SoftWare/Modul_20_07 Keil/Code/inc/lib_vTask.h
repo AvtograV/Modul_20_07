@@ -7,10 +7,11 @@
 #include "lib1Wire.h"
 #include "libExit.h"
 #include "sysInit.h"
+#include "libSIM900.h"
 
 
-/************* задача - обработка прерываний (запросов) от ОС Android по USART2 *************/
-	void vTaskUSART2_IRQHandlerAndroid (void *argument);
+/******************************* задача - USART2_IRQHandler ********************************/
+	void vTaskUSART2_IRQHandler(void *argument);
 	
 /**************** задача - обработка внешнего прерывания на PB10 от iButton *****************/
 	void vTaskEXTI10_IRQHandler (void *argument);

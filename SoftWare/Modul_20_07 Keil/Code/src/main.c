@@ -19,7 +19,7 @@ int main(void){
 	Init_DMA1_USART3_RX();
 	
 
-	xTaskCreate (vTaskUSART2_IRQHandlerAndroid, "обработка прерываний (запросов) от ОС Android по USART2", 32, NULL, 1, NULL);
+	xTaskCreate (vTaskUSART2_IRQHandler, "обработка прерываний (запросов) от ОС Android по USART2", 32, NULL, 1, NULL);
 	xTaskCreate (vTaskEXTI10_IRQHandler, "обработка EXTI (внешнего прерывания) от iButton", 32, NULL, 1, NULL);
 	xTaskCreate(vTaskPeriodicFunctionCall, "вызов функций через определённый промежуток времени", 32, NULL, 1, NULL);
 	
