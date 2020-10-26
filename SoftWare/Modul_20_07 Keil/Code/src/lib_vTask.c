@@ -11,10 +11,10 @@ extern char ROM_2[];
 	/******************************* задача - USART2_IRQHandler ********************************/
 	void vTaskUSART2_IRQHandler(void *argument) {
 		while(1) {
-			incomCall();
+			incomCall(send_parameters_to_511100);
 		}
 	}
-	
+
 	
 	/**************** задача - обработка внешнего прерывания на PB10 от iButton *****************/
 	void vTaskEXTI10_IRQHandler (void *argument) {
@@ -33,5 +33,7 @@ extern char ROM_2[];
 			temp_measure_request(ROM);
 			temp_measure_request(ROM_2);
 			measure_and_send_result_MQ_135(number_of_measurements_MQ);
+			
+			vTaskDelay(60000);
 	}
 }

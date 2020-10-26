@@ -4,6 +4,7 @@ extern uint8_t t_integer_current;															// переменная для �
 extern uint16_t number_of_measurements_MQ;										// кол-во измерений (выборка) для MQ
 
 extern char ROM[];
+extern char ROM_2[];
 
 char buffer_RX_USART2 [size_buffer_reseive_USART2];
 uint8_t num_bit_RX_USART2 = 0;
@@ -97,15 +98,13 @@ void Init_USART2_HC05_and_SIM900(void) {
 /******************** отправить байт по USART2 (HC-05 and SIM900) **********************/
 void USART2_Send_Char(char chr) {
 
-	while (!(USART2->SR & USART_SR_TC));
-	
+	while(!(USART2 -> SR & USART_SR_TC));
 	USART2 -> DR = chr;
 }
 
 
 /******************* отправить строку по USART2 (HC-05 and SIM900) *********************/
-void USART2_Send_String(char *str) {
-	
+void USART2_Send_String(char *str) {	
 	uint8_t i = 0;
 
 	while (str[i])
@@ -185,6 +184,7 @@ void USART2_IRQHandler (void) {
    }
   }
 }
+
 
 /********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
 void Init_USART3_iButton(void) {

@@ -45,30 +45,29 @@ void Init_ADC1_MQ135 (void) {
   RCC -> APB2ENR |= RCC_APB2ENR_IOPAEN ; 										// тактирования порта A
 	RCC -> APB2ENR |= RCC_APB2ENR_ADC1EN; 										// тактирование модуля ADC1
 
-	GPIOA -> CRL &= ~ (GPIO_CRL_MODE5 | GPIO_CRL_CNF5); 			// PA5 - аналоговый вход
+	GPIOA -> CRL &= ~(GPIO_CRL_MODE5 | GPIO_CRL_CNF5); 				// PA5 - аналоговый вход
+	GPIOA -> CRL &= ~(GPIO_CRL_MODE6 | GPIO_CRL_CNF6); 				// PA6 - аналоговый вход
 	
 	RCC -> CFGR |= RCC_CFGR_ADCPRE_DIV6;											// PCLK2 divided by 6
 	
 	ADC1 -> CR2 |= ADC_CR2_CAL; 															// запуск калибровки	
 	while (!(ADC1 -> CR2 & ADC_CR2_CAL)); 										// ожидание окончания калибровки
 	
-	ADC1 -> CR2 |= ADC_CR2_ADON; 															// разрешить АЦП
-	
-	ADC1 -> CR2 &= ~ADC_CR2_CONT;															// режим одиночного преобразования
-	
-	ADC1 -> CR2 |= ADC_CR2_EXTSEL; 														// определить внешнеее событие для запуска преобразования - SWSTART
-	
-	ADC1 -> CR2 |= ADC_CR2_EXTTRIG; 													// разрешение преобразования по внешнему событию 
-	
+	ADC1 -> CR2 |= ADC_CR2_ADON; 															// разрешить АЦП	
+	ADC1 -> CR2 &= ~ADC_CR2_CONT;															// режим одиночного преобразования	
+	ADC1 -> CR2 |= ADC_CR2_EXTSEL; 														// определить внешнеее событие для запуска преобразования - SWSTART	
+	ADC1 -> CR2 |= ADC_CR2_EXTTRIG; 													// разрешение преобразования по внешнему событию 	
 	ADC1 -> SMPR2 |= ADC_SMPR2_SMP1; 													// время выборки 239.5 cycles
 	
-	ADC1 -> SQR1 &= ~ADC_SQR1_L;															// количество каналов для преобразования 
-																														// в регулярной группе ADC1 (0000) - один канал
+	ADC1 -> SQR1 |= ADC_SQR1_L_0;															// количество каналов для преобразования
+																														// в регулярной группе ADC1 (0001) - два канала
 	
-	ADC1 -> SQR3 |= ADC_SQR3_SQ1_4;														// (PA5) - номер канала (пятый канал) первого
-																														//  преобразования регулярной группы ADC1
+	ADC1 -> SQR3 |= ADC_SQR3_SQ1_0;														// (0101) первое преобразование - 5 канал (PA5) - регулярная группа
+	ADC1 -> SQR3 |= ADC_SQR3_SQ1_2;
+	
+	ADC1 -> SQR3 |= ADC_SQR3_SQ2_1;														// (0110) второе преобразование - 6 канал (PA6) - регулярная группа
+	ADC1 -> SQR3 |= ADC_SQR3_SQ2_2;
 }
-
 
 /*********************************** измерить CO2 (MQ-135) **********************************/	
 uint16_t MQ135_measure_request(void) {
@@ -90,8 +89,7 @@ uint16_t arithmetic_mean_number(uint8_t num_of_measur) {
 			
 			vTaskDelay(10);
 		}
-	}
-	
+	}	
 	return sum_of_measurements_MQ /= num_of_measur;
 }
 
@@ -104,9 +102,8 @@ void measure_and_send_result_MQ_135 (uint16_t number_of_measurements) {
 	
 	utoa_cycle_sub(MQ135_res, MQ135_buffer);			// преобразование из числового в символьнное значение
 
-	USART2_Send_String("MQ135 ");
-	USART2_Send_String(MQ135_buffer);
-	
-	USART2_Send_Char(0xD);												// необходимое окончание 
-	USART2_Send_Char(0xA);												// при передаче по bluetooth
+	USART2_Send_String("MQ = ");
+	USART2_Send_String(MQ135_buffer);	
+	USART2_Send_Char('\r');												// необходимое окончание 
+	USART2_Send_Char('\n');												// при передаче по bluetooth
 }
