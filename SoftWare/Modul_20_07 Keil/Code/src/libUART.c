@@ -3,8 +3,7 @@
 extern uint8_t t_integer_current;															// переменная для сохранения текущего значения температуры
 extern uint16_t number_of_measurements_MQ;										// кол-во измерений (выборка) для MQ
 
-extern char ROM[];
-extern char ROM_2[];
+extern char ROM_7[];
 
 char buffer_RX_USART2 [size_buffer_reseive_USART2];
 uint8_t num_bit_RX_USART2 = 0;
@@ -156,7 +155,7 @@ void USART2_IRQHandler (void) {
 		}
 		else if (contains (buffer_RX_USART2, "request")) {										// requist temp and СО2, after conected Bluetooth					
 			t_integer_current = 255;
-			temp_measure_request(ROM);				
+			temp_measure_request(ROM_7);				
 			measure_and_send_result_MQ_135(number_of_measurements_MQ);
 		}
 		

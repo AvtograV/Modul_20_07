@@ -5,8 +5,8 @@ const uint8_t number_of_measurements_MQ = 100;									// кол-во измер
 extern uint8_t flag_EXTI_PB10;
 extern uint8_t t_integer_current;
 
-extern char ROM[];
-extern char ROM_2[];
+extern char ROM_7[];
+
 
 	/******************************* задача - USART2_IRQHandler ********************************/
 	void vTaskUSART2_IRQHandler(void *argument) {
@@ -30,8 +30,7 @@ extern char ROM_2[];
 	/********** задача - вызов различных функций через определённый промежуток времени **********/
 	void vTaskPeriodicFunctionCall (void *argument) {
 		while(1) {			
-			temp_measure_request(ROM);
-			temp_measure_request(ROM_2);
+			temp_measure_request(ROM_7);
 			measure_and_send_result_MQ_135(number_of_measurements_MQ);
 			
 			vTaskDelay(60000);

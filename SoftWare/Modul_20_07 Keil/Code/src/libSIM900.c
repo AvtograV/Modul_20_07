@@ -1,20 +1,15 @@
 #include "libSIM900.h"
 
 /******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
-
+char* allParamSensor[3];
 char text_sms [size_text_sms];
+
 extern char buffer_RX_USART2 [size_buffer_reseive_USART2];
-
 extern char MQ135_buffer[];
-
-extern char ROM[];
-extern char ROM_2[];
-
+extern char ROM_7[];
 extern uint8_t FLAG_SIM900_STATUS;
 
 const uint8_t max_num_requests = 5;														// reguest "AT" <-> "OK"
-
-char* allParamSensor[3];
 
 /********************** временно **********************/
 
@@ -97,10 +92,7 @@ uint8_t incomCall (char* comm_send_sms_to_tell) {
 		measure_and_send_result_MQ_135(100);
 		USART2_Send_String("\r\n");
 		
-		temp_measure_request(ROM);
-		USART2_Send_String("\r\n");
-		
-		temp_measure_request(ROM_2);
+		temp_measure_request(ROM_7);
 		
 		vTaskDelay(1);	
 		USART2_Send_Char(0x1A);																				// sub

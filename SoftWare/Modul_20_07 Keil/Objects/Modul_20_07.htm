@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Modul_20_07.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Modul_20_07.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Oct 26 17:59:05 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Oct 29 08:46:03 2020
 <BR><P>
 <H3>Maximum Stack Usage =        160 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -94,8 +94,8 @@ Function Pointers
 Global Symbols
 </H3>
 <P><STRONG><a name="[3e]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
-<BR><BR>[Calls]<UL><LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
-<LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<BR><BR>[Calls]<UL><LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
 </UL>
 
 <P><STRONG><a name="[40]"></a>__scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter))
@@ -183,8 +183,8 @@ Global Symbols
 <P><STRONG><a name="[ac]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000C))
 
 <P><STRONG><a name="[41]"></a>__rt_entry</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry.o(.ARM.Collect$$rtentry$$00000000))
-<BR><BR>[Called By]<UL><LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
-<LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<BR><BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
 </UL>
 
 <P><STRONG><a name="[ad]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000002))
@@ -627,7 +627,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[39]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskEXTI10_IRQHandler
 </UL>
 
-<P><STRONG><a name="[68]"></a>incomCall</STRONG> (Thumb, 106 bytes, Stack size 8 bytes, libsim900.o(i.incomCall))
+<P><STRONG><a name="[68]"></a>incomCall</STRONG> (Thumb, 94 bytes, Stack size 8 bytes, libsim900.o(i.incomCall))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = incomCall &rArr; temp_measure_request &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -775,7 +775,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
 </UL>
-<P><STRONG><a name="[3a]"></a>vTaskPeriodicFunctionCall</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, lib_vtask.o(i.vTaskPeriodicFunctionCall))
+<P><STRONG><a name="[3a]"></a>vTaskPeriodicFunctionCall</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, lib_vtask.o(i.vTaskPeriodicFunctionCall))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = vTaskPeriodicFunctionCall &rArr; temp_measure_request &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
