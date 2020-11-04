@@ -10,8 +10,9 @@ extern char ROM_7[];
 	/******************************* задача - USART2_IRQHandler ********************************/
 	void vTaskUSART2_IRQHandler(void *argument) {
 		while(1) {
-			incomCall(send_parameters_to_511100);
 			getString_USART2();
+			
+			incomCall(send_parameters_to_511100);
 		}
 	}
 
