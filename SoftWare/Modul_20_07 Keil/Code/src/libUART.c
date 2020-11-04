@@ -6,10 +6,13 @@ extern uint16_t number_of_measurements_MQ;										// кол-во измере�
 extern char ROM_7[];
 
 char buffer_RX_USART2 [size_buffer_reseive_USART2];
+char* P_buf_RX = &buffer_RX_USART2[0];												// P_buf_RX указатель на buffer_RX_USART2[0]
+
 uint8_t num_bit_RX_USART2 = 0;
 
 uint8_t FLAG_SIM900_STATUS = 0;
 uint8_t FLAG_HC05_STATUS = 0;
+uint8_t FLAG_GETSTRING_STATUS = 0;
 
 
 /******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20) *******************/
@@ -138,50 +141,24 @@ void USART2_IRQHandler (void) {
 	buffer_RX_USART2[num_bit_RX_USART2] = USART2 -> DR;											// записать каждый полученный бит в строку
   num_bit_RX_USART2++;
  
-	if(buffer_RX_USART2[num_bit_RX_USART2 - 1] == '\r') {										// окончание строки
-
-		// Set FLAG_HC05_STATUS
-		if (contains (buffer_RX_USART2, "open")) {			
-			GPIOB -> BSRR |= GPIO_BSRR_BS12;																		// open the lock (on solenoid coil - 1)		
-			USART2_Send_String("D12 ON");
-			USART2_Send_Char(0xD);
-			USART2_Send_Char(0xA);
-		}
-		else if (contains (buffer_RX_USART2, "close")) {			
-			USART2_Send_String("D12 OFF");
-			GPIOB -> BSRR |= GPIO_BSRR_BR12;																		// close the lock (on solenoid coil - 0)
-			USART2_Send_Char(0xD);
-			USART2_Send_Char(0xA);
-		}
-		else if (contains (buffer_RX_USART2, "request")) {										// requist temp and СО2, after conected Bluetooth					
-			t_integer_current = 255;
-			temp_measure_request(ROM_7);				
-			measure_and_send_result_MQ_135(number_of_measurements_MQ);
-		}
-		
-		// Set FLAG_SIM900_STATUS
-		else if (contains (buffer_RX_USART2, "ERROR")) {
-			FLAG_SIM900_STATUS = 0;
-		}
-		else if (contains (buffer_RX_USART2, "OK")) {													// requist to SIM-900 (send "AT") or after sending SMS
-			FLAG_SIM900_STATUS = 1;
-		}
-		else if (contains (buffer_RX_USART2, ">")) {													// willingness to send SMS text
-			FLAG_SIM900_STATUS = 2;
-		}
-		else if (contains (buffer_RX_USART2, "RING")) {												// incom call
-			FLAG_SIM900_STATUS = 3;
-		}
- 
-		// Clear buffer USART2 RX
-		for (uint8_t i = 0; i < size_buffer_reseive_USART2; i++) {
-			if (buffer_RX_USART2[i] != 0) {
-				buffer_RX_USART2[i] = 0;
-			}
-		}		
-		num_bit_RX_USART2 = 0;
+	if (buffer_RX_USART2[num_bit_RX_USART2 - 1] == '\r') {									// окончание строки
+			FLAG_GETSTRING_STATUS = 1;
    }
   }
+}
+
+
+/***************************** получить строку по USART2 *******************************/
+void getString_USART2 (void) {
+	while (FLAG_GETSTRING_STATUS != 0) {
+		USART2_Send_String(buffer_RX_USART2);
+
+		num_bit_RX_USART2 = FLAG_GETSTRING_STATUS = 0;
+		
+		for (uint8_t i = 0; i < size_buffer_reseive_USART2; i++) {
+			*(P_buf_RX + i) = 0x00;
+		}
+	}
 }
 
 

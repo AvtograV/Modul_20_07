@@ -32,7 +32,8 @@ void USART2_Send_Char(char chr);
 void USART2_Send_String(char *str);
 /*************************** принять байт от HC-05 по USART2 ****************************/
 void USART2_IRQHandler(void);
-
+/***************************** получить строку по USART2 *******************************/
+void getString_USART2 (void);
 
 
 /*********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/

@@ -8,6 +8,7 @@
 #include "libExit.h"
 #include "sysInit.h"
 #include "libSIM900.h"
+#include "libUART.h"
 
 
 /******************************* задача - USART2_IRQHandler ********************************/
