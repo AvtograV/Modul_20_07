@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             if (textTemp.getText() == "Измерение" + "\n" + "температуры"
                                     || textMQ135.getText() == "Измерение" + "\n" + "содержания СO2") {
                                 // отправить запрос на измерение температуры
-                                byte[] bytesToSend = "r".getBytes();
+                                byte[] bytesToSend = "REQUEST\r\n".getBytes();
                                 myThreadConnected.write(bytesToSend);
                             }
                         }
@@ -297,10 +297,11 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                                 } else {
                                     switch (sbprint) {
 
-                                        case "D10 ON":
-
-                                        case "D10 OFF":
-                                            Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
+                                        case "D12 ON":
+                                         //   Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case "D12 OFF":
+                                         //   Toast.makeText(MainActivity.this, sbprint, Toast.LENGTH_SHORT).show();
                                             break;
 
                                         default:
@@ -333,16 +334,16 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             case R.id.toggle_button_1:
                 if (isChecked) {
                     if (myThreadConnected != null) {
-                        byte[] bytesToSend = "a".getBytes();
+                        byte[] bytesToSend = "OPEN\r\n".getBytes();
                         myThreadConnected.write(bytesToSend);
                     }
-                    Toast.makeText(MainActivity.this, "D10 ON", Toast.LENGTH_SHORT).show();
+ //                   Toast.makeText(MainActivity.this, "D10 ON", Toast.LENGTH_SHORT).show();
                 } else {
                     if (myThreadConnected != null) {
-                        byte[] bytesToSend = "A".getBytes();
+                        byte[] bytesToSend = "CLOSE\r\n".getBytes();
                         myThreadConnected.write(bytesToSend);
                     }
-                    Toast.makeText(MainActivity.this, "D10 OFF", Toast.LENGTH_SHORT).show();
+ //                   Toast.makeText(MainActivity.this, "D10 OFF", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.toggle_button_2:
@@ -353,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         myThreadConnected.write(bytesToSend);
                     }
 
-                    Toast.makeText(MainActivity.this, "D11 ON", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "D11 ON", Toast.LENGTH_SHORT).show();
                 } else {
                     if (myThreadConnected != null) {
 
@@ -361,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         myThreadConnected.write(bytesToSend);
                     }
 
-                    Toast.makeText(MainActivity.this, "D11 OFF", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "D11 OFF", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.toggle_button_3:

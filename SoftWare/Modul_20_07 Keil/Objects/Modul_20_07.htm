@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Modul_20_07.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Modul_20_07.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Wed Nov 04 12:51:41 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Wed Nov 11 18:01:01 2020
 <BR><P>
 <H3>Maximum Stack Usage =        160 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -527,7 +527,7 @@ Global Symbols
 <LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OW_toBits
 <LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OW_Reset
 </UL>
-<BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i_Button
+<BR>[Called By]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i_Button
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
 </UL>
 
@@ -565,9 +565,9 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_md_vl.o(RESET)
 </UL>
 <P><STRONG><a name="[60]"></a>USART2_Send_Char</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, libuart.o(i.USART2_Send_Char))
-<BR><BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
+<BR><BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_String
 </UL>
 
@@ -576,9 +576,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_Char
 </UL>
-<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
+<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getString_USART2
 </UL>
 
@@ -592,7 +592,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MQ135_measure_request
 </UL>
-<BR>[Called By]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
+<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 </UL>
 
 <P><STRONG><a name="[53]"></a>change_speed_USART1</STRONG> (Thumb, 56 bytes, Stack size 0 bytes, libuart.o(i.change_speed_USART1))
@@ -603,24 +603,23 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OW_Reset
 </UL>
 
-<P><STRONG><a name="[65]"></a>contains</STRONG> (Thumb, 84 bytes, Stack size 20 bytes, libuart.o(i.contains))
+<P><STRONG><a name="[65]"></a>contains</STRONG> (Thumb, 138 bytes, Stack size 20 bytes, libuart.o(i.contains))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = contains
 </UL>
 <BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getString_USART2
 </UL>
 
-<P><STRONG><a name="[64]"></a>getString_USART2</STRONG> (Thumb, 248 bytes, Stack size 8 bytes, libuart.o(i.getString_USART2))
+<P><STRONG><a name="[64]"></a>getString_USART2</STRONG> (Thumb, 282 bytes, Stack size 8 bytes, libuart.o(i.getString_USART2))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = getString_USART2 &rArr; temp_measure_request &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;contains
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_String
 </UL>
 <BR>[Called By]<UL><LI><a href="#[38]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskUSART2_IRQHandler
 </UL>
 
-<P><STRONG><a name="[68]"></a>i_Button</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, lib1wire.o(i.i_Button))
+<P><STRONG><a name="[67]"></a>i_Button</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, lib1wire.o(i.i_Button))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = i_Button &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -629,12 +628,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[39]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskEXTI10_IRQHandler
 </UL>
 
-<P><STRONG><a name="[69]"></a>incomCall</STRONG> (Thumb, 94 bytes, Stack size 8 bytes, libsim900.o(i.incomCall))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = incomCall &rArr; temp_measure_request &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[68]"></a>incomCall</STRONG> (Thumb, 94 bytes, Stack size 8 bytes, libsim900.o(i.incomCall))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = incomCall &rArr; measure_and_send_result_MQ_135 &rArr; arithmetic_mean_number &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
+<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_String
 <LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_Char
 </UL>
@@ -661,7 +660,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
 
-<P><STRONG><a name="[67]"></a>measure_and_send_result_MQ_135</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, libadc.o(i.measure_and_send_result_MQ_135))
+<P><STRONG><a name="[69]"></a>measure_and_send_result_MQ_135</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, libadc.o(i.measure_and_send_result_MQ_135))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = measure_and_send_result_MQ_135 &rArr; arithmetic_mean_number &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arithmetic_mean_number
@@ -669,8 +668,7 @@ Global Symbols
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_String
 <LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_Char
 </UL>
-<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
-<LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getString_USART2
+<BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
 <LI><a href="#[3a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPeriodicFunctionCall
 </UL>
 
@@ -696,7 +694,7 @@ Global Symbols
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_String
 <LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_Send_Char
 </UL>
-<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
+<BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getString_USART2
 <LI><a href="#[3a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPeriodicFunctionCall
 </UL>
@@ -764,8 +762,8 @@ Global Symbols
 <LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
 </UL>
 <BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arithmetic_mean_number
-<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
-<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i_Button
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
+<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i_Button
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
 <LI><a href="#[3a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPeriodicFunctionCall
 </UL>
@@ -773,16 +771,16 @@ Global Symbols
 <P><STRONG><a name="[39]"></a>vTaskEXTI10_IRQHandler</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, lib_vtask.o(i.vTaskEXTI10_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = vTaskEXTI10_IRQHandler &rArr; i_Button &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i_Button
+<BR>[Calls]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i_Button
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
 </UL>
 <P><STRONG><a name="[3a]"></a>vTaskPeriodicFunctionCall</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, lib_vtask.o(i.vTaskPeriodicFunctionCall))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = vTaskPeriodicFunctionCall &rArr; temp_measure_request &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = vTaskPeriodicFunctionCall &rArr; measure_and_send_result_MQ_135 &rArr; arithmetic_mean_number &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
+<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_measure_request
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
 </UL>
@@ -806,9 +804,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[38]"></a>vTaskUSART2_IRQHandler</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, lib_vtask.o(i.vTaskUSART2_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = vTaskUSART2_IRQHandler &rArr; incomCall &rArr; temp_measure_request &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = vTaskUSART2_IRQHandler &rArr; incomCall &rArr; measure_and_send_result_MQ_135 &rArr; arithmetic_mean_number &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
+<BR>[Calls]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;incomCall
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getString_USART2
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
@@ -954,7 +952,7 @@ Local Symbols
 <P><STRONG><a name="[77]"></a>utoa_cycle_sub</STRONG> (Thumb, 82 bytes, Stack size 20 bytes, libadc.o(i.utoa_cycle_sub))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = utoa_cycle_sub
 </UL>
-<BR>[Called By]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
+<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;measure_and_send_result_MQ_135
 </UL>
 <P>
 <H3>

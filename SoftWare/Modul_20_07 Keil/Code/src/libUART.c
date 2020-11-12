@@ -5,8 +5,8 @@ extern uint16_t number_of_measurements_MQ;										// кол-во измере�
 
 extern char ROM_7[];
 
-char buffer_RX_USART2 [size_buffer_reseive_USART2];
-char* P_buf_RX = &buffer_RX_USART2[0];												// P_buf_RX указатель на buffer_RX_USART2[0]
+char buffer_RX_USART2 [size_buffer_RX_USART2];
+char* p_buf_RX = &buffer_RX_USART2[0];												// p_buf_RX указатель на buffer_RX_USART2[0]
 
 uint8_t num_bit_RX_USART2 = 0;
 
@@ -14,6 +14,15 @@ uint8_t FLAG_SIM900_STATUS = 0;
 uint8_t FLAG_HC05_STATUS = 0;
 uint8_t FLAG_GETSTRING_STATUS = 0;
 
+
+/***************************** concatenate t to end of s *******************************/
+void strCat(char* s, char* t) {
+	int i, j;
+	i = j = 0;
+	
+	while(s[i] != '\0')	i++;	
+	while((s[i++] = t[j++]) != '\0');
+}
 
 /******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20) *******************/
 void Init_USART1_DS18B20(void) {
@@ -116,22 +125,37 @@ void USART2_Send_String(char *str) {
 /************* узнать - содержит ли строка определённую последовательность **************/
 uint8_t contains (char* str, char* sequence) {
 	
-	uint8_t i_seq, i_str, seq_lenght, num_of_coincidences;				// num_of_coincidences - число(кол-во) совпадений символов
+	uint8_t i_seq, i_str, seq_lenght, num_of_coincidences;				// num_of_coincidences - this is a number of matches
 		i_seq = i_str = seq_lenght = num_of_coincidences = 0;
 	
 	while (sequence[seq_lenght] != 0x00)													// find out the lenght of the "sequence"
 		seq_lenght++;
 	
 	while (sequence[i_seq] != str[i_str]													// find out what "str[i_str]" matches start with...
-		&& i_str < size_buffer_reseive_USART2)
+		&& i_str < size_buffer_RX_USART2)
 		i_str++;
+	
+	while (sequence[i_seq] == str[i_str]													// determinate the number or matches
+		&& i_seq < seq_lenght) {
+			i_seq++;
+			i_str++;
+			num_of_coincidences++;		
+	}
+	
+	if (i_seq == 1) {																							// if only one character match
+		i_seq = num_of_coincidences = 0;
+		while (sequence[i_seq] != str[i_str]												// search further in the line
+		&& i_str < size_buffer_RX_USART2)
+			i_str++;
+	}
 	
 	while (sequence[i_seq] == str[i_str] && i_seq < seq_lenght) {
 			i_seq++;
 			i_str++;
 			num_of_coincidences++;		
 	}
-	return seq_lenght == num_of_coincidences;
+	
+return seq_lenght == num_of_coincidences;
 }
 
 
@@ -147,59 +171,54 @@ void USART2_IRQHandler (void) {
   }
 }
 
-
 /***************************** получить строку по USART2 *******************************/
 void getString_USART2 (void) {
-	while (FLAG_GETSTRING_STATUS != 0) {
+	if (FLAG_GETSTRING_STATUS == 1) {
+		
+		USART2_Send_String(buffer_RX_USART2);
 		
 		if (contains (buffer_RX_USART2, "OPEN")) {												// open the lock (on solenoid coil - 1)
-				GPIOB -> BSRR |= GPIO_BSRR_BS12;																		
-				USART2_Send_String("D12 ON\r\n");
-			
-				USART2_Send_String(buffer_RX_USART2);
-			}
+			GPIOB -> BSRR |= GPIO_BSRR_BS12;																		
+			USART2_Send_String("D12 ON\r\n");
+		}
 		else if (contains (buffer_RX_USART2, "CLOSE")) {									// close the lock (on solenoid coil - 0)
-				GPIOB -> BSRR |= GPIO_BSRR_BR12;
-				USART2_Send_String("D12 OFF\r\n");
-			
-				USART2_Send_String(buffer_RX_USART2);
+			GPIOB -> BSRR |= GPIO_BSRR_BR12;
+			USART2_Send_String("D12 OFF\r\n");
 		}
 		else if (contains (buffer_RX_USART2, "REQUEST")) {								// requist temp and СО2, after conected Bluetooth
-				t_integer_current = 255;
-				temp_measure_request(ROM_7);
-				measure_and_send_result_MQ_135(number_of_measurements_MQ);
-			
-				USART2_Send_String(buffer_RX_USART2);
+			t_integer_current = 255;
+			temp_measure_request(ROM_7);
 		}
 		
 			// Set FLAG_SIM900_STATUS
 		else if (contains (buffer_RX_USART2, "ERROR")) {
-				FLAG_SIM900_STATUS = 0;
-			
-			USART2_Send_String(buffer_RX_USART2);
+			FLAG_SIM900_STATUS = 0;
 		}
 		else if (contains (buffer_RX_USART2, "OK")) 	{											// requist to SIM-900 (send "AT") or after sending SMS
-				FLAG_SIM900_STATUS = 1;
-			
-			USART2_Send_String(buffer_RX_USART2);
+			FLAG_SIM900_STATUS = 1;
 		}
-			
 		else if (contains (buffer_RX_USART2, "RING")) {											// incom call
-				FLAG_SIM900_STATUS = 3;
-			
-			USART2_Send_String(buffer_RX_USART2);
+			FLAG_SIM900_STATUS = 3;
+		}		
+		else if (contains (buffer_RX_USART2, "\x3E\x20\r\n")) {							// 0x20 - "space" charecter, x3E - '<'
+			FLAG_SIM900_STATUS = 2;
+		}				
+		else if (contains (buffer_RX_USART2, "+CMTI: \"SM\",")) {
+			USART2_Send_String("AT+CMGL=\"REC UNREAD\"\r\n");	
 		}
-			
-		else if (contains (buffer_RX_USART2, "+CMTI: \"SM\",1")) {
-			USART2_Send_String("AT+CMGL=\"REC UNREAD\"\r\n");
-				
-			USART2_Send_String(buffer_RX_USART2);
+		else if (contains (buffer_RX_USART2, "LIGHT ON")) {			
+			GPIOB -> BSRR |= GPIO_BSRR_BS12;
+			USART2_Send_String("AT+CMGDA=\"DEL READ\"\r\n");
 		}
-
+		else if (contains (buffer_RX_USART2, "LIGHT OFF")) {
+			GPIOB -> BSRR |= GPIO_BSRR_BR12;
+			USART2_Send_String("AT+CMGDA=\"DEL READ\"\r\n");
+		}
+		
 		num_bit_RX_USART2 = FLAG_GETSTRING_STATUS = 0;
 		
-		for (uint8_t i = 0; i < size_buffer_reseive_USART2; i++) {					// clear buffer_RX_USART2
-			*(P_buf_RX + i) = 0x00;
+		for (uint8_t i = 0; i < size_buffer_RX_USART2; i++) {									// clear buffer_RX_USART2
+			*(p_buf_RX + i) = 0x00;
 		}
 	}
 }

@@ -12,7 +12,7 @@
 #define BAUDRATE_USART2 												38400
 #define BAUDRATE_USART3 												9600
 
-#define size_buffer_reseive_USART2							50
+#define size_buffer_RX_USART2										80
 
 /*********************** USART1 (PA9 (Single Wire (Half-Duplex) *************************/
 void Init_USART1_DS18B20(void);

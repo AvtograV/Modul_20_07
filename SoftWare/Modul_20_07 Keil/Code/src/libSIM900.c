@@ -4,26 +4,11 @@
 char* allParamSensor[3];
 char text_sms [size_text_sms];
 
-extern char buffer_RX_USART2 [size_buffer_reseive_USART2];
 extern char MQ135_buffer[];
 extern char ROM_7[];
 extern uint8_t FLAG_SIM900_STATUS;
 
 const uint8_t max_num_requests = 5;														// reguest "AT" <-> "OK"
-
-/********************** временно **********************/
-
-void GetStatus(uint8_t sim900_status) {
-	if (sim900_status == 0)
-		USART2_Send_String("\r\nstatus - 0\r\n");
-	else if (sim900_status == 1)
-		USART2_Send_String("\r\nstatus - 1\r\n");
-	else if (sim900_status == 2)
-		USART2_Send_String("\r\nstatus - 2\r\n");
-	else if (sim900_status == 3)
-		USART2_Send_String("\r\nstatus - 3\r\n");
-}
-
 
 
 /********************** check SIM900 and send his status to USART **********************/
@@ -82,7 +67,7 @@ uint8_t incomCall (char* comm_send_sms_to_tell) {
 		vTaskDelay(1000);
 		
 		USART2_Send_String(comm_send_sms_to_tell);										// send_parameters_to_511100						"AT+CMGS=\"+79025623095\"\r\n"
-		
+
 //		while (!(FLAG_SIM900_STATUS == 2)) {}													// FLAG_SIM900_STATUS = ">\r\n"
 																																	// willingness to send SMS text
 		FLAG_SIM900_STATUS = 0;
@@ -97,5 +82,5 @@ uint8_t incomCall (char* comm_send_sms_to_tell) {
 		vTaskDelay(1);	
 		USART2_Send_Char(0x1A);																				// sub
 	}
-	return 0;
+	return 1;
 }

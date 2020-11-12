@@ -1,26 +1,4 @@
-	RCC -> APB2ENR |= RCC_APB2ENR_IOPBEN;	
-	GPIOB -> CRH |= GPIO_CRH_MODE10_0;
-	
-	GPIOB->BSRR |= GPIO_BSRR_BS10;
-	vTaskDelay(valueDelay);
-	GPIOB->BSRR |= GPIO_BSRR_BR10;
-	vTaskDelay(valueDelay);
-	
-	
-	
-/*			 if (MQ135_res > 0  	&& MQ135_res <= 1040) utoa_cycle_sub(1, MQ135_buffer);
-	else if (MQ135_res > 1040 && MQ135_res <= 1380)	utoa_cycle_sub(2, MQ135_buffer);
-	else if (MQ135_res > 1380 && MQ135_res <= 1720)	utoa_cycle_sub(3, MQ135_buffer);
-	else if (MQ135_res > 1720 && MQ135_res <= 2060)	utoa_cycle_sub(4, MQ135_buffer);
-	else if (MQ135_res > 2060 && MQ135_res <= 2400)	utoa_cycle_sub(5, MQ135_buffer);
-	else if (MQ135_res > 2400 && MQ135_res <= 2740)	utoa_cycle_sub(6, MQ135_buffer);
-	else if (MQ135_res > 2740 && MQ135_res <= 3080)	utoa_cycle_sub(7, MQ135_buffer);
-	else if (MQ135_res > 3080 && MQ135_res <= 3420)	utoa_cycle_sub(8, MQ135_buffer);
-	else if (MQ135_res > 3420 && MQ135_res <= 3760)	utoa_cycle_sub(9, MQ135_buffer);
-	else if (MQ135_res > 3760 && MQ135_res <= 4000)	utoa_cycle_sub(10, MQ135_buffer);	*/		
-		
-	
-	
+
 											HC-05(master):	
 +NAME:STM32F407VG
 +ADDR:14:3:536f9

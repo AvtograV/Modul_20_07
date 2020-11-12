@@ -231,7 +231,7 @@ void temp_measure_request(char *ROM_DS18B20) {
 			// преобразовать из цифровых в символьные значения
 			utoa_cycle_sub(t_integer_new, t_buffer_char);
 			
-			USART2_Send_String("Temp ");
+			USART2_Send_String("temp ");
 			USART2_Send_String(t_buffer_char);
 			USART2_Send_Char('\r'); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
 			USART2_Send_Char('\n'); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'			

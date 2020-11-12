@@ -10,8 +10,7 @@ extern char ROM_7[];
 	/******************************* задача - USART2_IRQHandler ********************************/
 	void vTaskUSART2_IRQHandler(void *argument) {
 		while(1) {
-			getString_USART2();
-			
+			getString_USART2();			
 			incomCall(send_parameters_to_511100);
 		}
 	}
@@ -33,7 +32,6 @@ extern char ROM_7[];
 		while(1) {			
 			temp_measure_request(ROM_7);
 			measure_and_send_result_MQ_135(number_of_measurements_MQ);
-			
-			vTaskDelay(60000);
+			vTaskDelay(5000);
 	}
 }
