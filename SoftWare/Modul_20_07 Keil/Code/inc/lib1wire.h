@@ -34,7 +34,7 @@
 
 
 /*********** измерить температуру и отправить в приложение Android (в т. ч. по запросу)************/
-void temp_measure_request(char *ROM_DS18B20);
+void temp_measure_request(char *ROM_DS18B20, char * nameTempSensor);
 
 /************************************** прочитать ROM DS18B20 *************************************/
 void read_ROM_DS18B20(void);

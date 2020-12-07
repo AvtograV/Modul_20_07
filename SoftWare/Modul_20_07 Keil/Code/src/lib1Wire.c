@@ -4,7 +4,7 @@
 const uint16_t openLockTime = 5000;																				// время открытия замка (соленоид)
 const uint16_t pow10Table2_16[] = {10ul, 1ul};
 
-//const char ROM_1[] = {0x28, 0xff, 0x07, 0x21, 0x33, 0x17, 0x04, 0x3f};		// 0x28 - family code (DS18B20)			0x3f - CRC
+const char ROM_1[] = {0x28, 0xff, 0x07, 0x21, 0x33, 0x17, 0x04, 0x3f};		// 0x28 - family code (DS18B20)			0x3f - CRC
 //const char ROM_2[] = {0x28, 0xff, 0xCA, 0x81, 0x33, 0x17, 0x04, 0x58};		// 0xff, 0xCA, 0x81, 0x33, 0x17, 0x04 - ROM CODE (in reverse order)
 //const char ROM_3[] = {0x28, 0xff, 0xFB, 0x1F, 0x33, 0x17, 0x04, 0xE5};
 //const char ROM_4[] = {0x28, 0xff, 0x9D, 0x8C, 0x32, 0x17, 0x03, 0x29};
@@ -209,7 +209,7 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 
 
 /******************* измерить температуру и отправить в приложение Android ******************/
-void temp_measure_request(char *ROM_DS18B20) {
+void temp_measure_request(char *ROM_DS18B20, char *nameTempSensor) {
 		
 		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\x55", 1, 0, 0, OW_NO_READ);														// MATCH ROM
 		OW_Send(OW_NO_RESET, usart1_DS18B20, ROM_DS18B20, 8, 0, 0, OW_NO_READ);	
@@ -226,19 +226,21 @@ void temp_measure_request(char *ROM_DS18B20) {
 	
 		// проверить - если значение температуры изменилось - отправить новое значение
 		// если не изменилось - не отправлять
-		if (t_integer_current != t_integer_new || t_integer_current == 255) {
+		if (t_integer_current != t_integer_new ) {
+			if (t_integer_new > 0 && t_integer_new <= 50) {
 			
-			// преобразовать из цифровых в символьные значения
-			utoa_cycle_sub(t_integer_new, t_buffer_char);
+				// преобразовать из цифровых в символьные значения
+				utoa_cycle_sub(t_integer_new, t_buffer_char);
 			
-			USART2_Send_String("temp ");
-			USART2_Send_String(t_buffer_char);
-			USART2_Send_Char('\r'); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
-			USART2_Send_Char('\n'); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'			
+				USART2_Send_String(nameTempSensor);
+				USART2_Send_String(t_buffer_char);
+				USART2_Send_Char('\r'); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
+				USART2_Send_Char('\n'); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'			
 			
-		// обновить текущее значение
+				// обновить текущее значение
 			t_integer_current = t_integer_new;
 		}
+	}
 }
 
 

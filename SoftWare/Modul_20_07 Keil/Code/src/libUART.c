@@ -1,8 +1,8 @@
 #include "libUART.h"
 
-extern uint8_t t_integer_current;															// переменная для сохранения текущего значения температуры
 extern uint16_t number_of_measurements_MQ;										// кол-во измерений (выборка) для MQ
 
+extern char ROM_1[];
 extern char ROM_7[];
 
 char buffer_RX_USART2 [size_buffer_RX_USART2];
@@ -177,17 +177,31 @@ void getString_USART2 (void) {
 		
 		USART2_Send_String(buffer_RX_USART2);
 		
-		if (contains (buffer_RX_USART2, "OPEN")) {												// open the lock (on solenoid coil - 1)
-			GPIOB -> BSRR |= GPIO_BSRR_BS12;																		
-			USART2_Send_String("D12 ON\r\n");
+		if (contains (buffer_RX_USART2, "FORCED_VENT_ON")) {
+			GPIOB -> BSRR |= GPIO_BSRR_BS12;
+				if (GPIOB -> ODR & GPIO_ODR_ODR12)
+					USART2_Send_String("FORCED_ON\r\n");
 		}
-		else if (contains (buffer_RX_USART2, "CLOSE")) {									// close the lock (on solenoid coil - 0)
+		else if (contains (buffer_RX_USART2, "FORCED_VENT_OFF")) {
 			GPIOB -> BSRR |= GPIO_BSRR_BR12;
-			USART2_Send_String("D12 OFF\r\n");
+				if (~(GPIOB -> ODR & GPIO_ODR_ODR12))
+					USART2_Send_String("FORCED_OFF\r\n");
 		}
-		else if (contains (buffer_RX_USART2, "REQUEST")) {								// requist temp and СО2, after conected Bluetooth
-			t_integer_current = 255;
-			temp_measure_request(ROM_7);
+		if (contains (buffer_RX_USART2, "EXHAUST_VENT_ON")) {
+			GPIOB -> BSRR |= GPIO_BSRR_BS13;																		
+			USART2_Send_String("D13 ON\r\n");
+		}
+		else if (contains (buffer_RX_USART2, "EXHAUST_VENT_OFF")) {
+			GPIOB -> BSRR |= GPIO_BSRR_BR13;
+			USART2_Send_String("D13 OFF\r\n");
+		}
+		else if (contains (buffer_RX_USART2, "REQUEST")) {								// requist, after connected Bluetooth
+			FLAG_HC05_STATUS = 1;																						// 1 - temp_measure_request(ROM_1, "temp right ")
+																																			// 2 - temp_measure_request(ROM_7, "temp left ");
+			if (GPIOB -> ODR & GPIO_ODR_ODR12)
+					USART2_Send_String("FORCED_ON\r\n");
+			else if (~(GPIOB -> ODR & GPIO_ODR_ODR12))
+					USART2_Send_String("FORCED_OFF\r\n");
 		}
 		
 			// Set FLAG_SIM900_STATUS

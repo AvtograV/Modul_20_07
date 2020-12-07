@@ -66,8 +66,10 @@ void Error_Handler(void);
 #define Analog_MQ135_1_GPIO_Port GPIOA
 #define USART3_iButton_Pin GPIO_PIN_10
 #define USART3_iButton_GPIO_Port GPIOB
-#define Solenoid_Pin GPIO_PIN_12
-#define Solenoid_GPIO_Port GPIOB
+#define FORCED_VENTILATION_Pin GPIO_PIN_12
+#define FORCED_VENTILATION_GPIO_Port GPIOB
+#define EXHAUST_VENTILATION_Pin GPIO_PIN_13
+#define EXHAUST_VENTILATION_GPIO_Port GPIOB
 #define USART1_DS18B20_Pin GPIO_PIN_9
 #define USART1_DS18B20_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

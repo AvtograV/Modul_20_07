@@ -317,14 +317,20 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(Solenoid_GPIO_Port, Solenoid_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(FORCED_VENTILATION_GPIO_Port, FORCED_VENTILATION_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : Solenoid_Pin */
-  GPIO_InitStruct.Pin = Solenoid_Pin;
+  /*Configure GPIO pin : FORCED_VENTILATION_Pin */
+  GPIO_InitStruct.Pin = FORCED_VENTILATION_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(Solenoid_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(FORCED_VENTILATION_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : EXHAUST_VENTILATION_Pin */
+  GPIO_InitStruct.Pin = EXHAUST_VENTILATION_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(EXHAUST_VENTILATION_GPIO_Port, &GPIO_InitStruct);
 
 }
 

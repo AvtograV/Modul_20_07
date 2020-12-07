@@ -38,4 +38,7 @@ void GPIO_Init (void) {
 
 	GPIOB -> CRH &= ~GPIO_CRH_CNF12;
 	GPIOB -> CRH |= GPIO_CRH_MODE12_0;
+	
+	GPIOB -> CRH &= ~GPIO_CRH_CNF13;
+	GPIOB -> CRH |= GPIO_CRH_MODE13_0;
 }

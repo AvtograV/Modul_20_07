@@ -5,7 +5,10 @@ char* allParamSensor[3];
 char text_sms [size_text_sms];
 
 extern char MQ135_buffer[];
+
+extern char ROM_1[];
 extern char ROM_7[];
+
 extern uint8_t FLAG_SIM900_STATUS;
 
 const uint8_t max_num_requests = 5;														// reguest "AT" <-> "OK"
@@ -77,7 +80,8 @@ uint8_t incomCall (char* comm_send_sms_to_tell) {
 		measure_and_send_result_MQ_135(100);
 		USART2_Send_String("\r\n");
 		
-		temp_measure_request(ROM_7);
+		temp_measure_request(ROM_1, "temp right ");
+		temp_measure_request(ROM_7, "temp left ");
 		
 		vTaskDelay(1);	
 		USART2_Send_Char(0x1A);																				// sub
