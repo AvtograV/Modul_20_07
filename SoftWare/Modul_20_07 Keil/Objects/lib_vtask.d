@@ -20,7 +20,9 @@
 .\objects\lib_vtask.o: .\Code\inc\lib1wire.h
 .\objects\lib_vtask.o: .\Code\inc\libADC.h
 .\objects\lib_vtask.o: .\Code\inc\libUART.h
+.\objects\lib_vtask.o: .\Code\inc\libHc05.h
+.\objects\lib_vtask.o: .\Code\inc\libSIM900.h
 .\objects\lib_vtask.o: .\FreeRTOS\inc\queue.h
 .\objects\lib_vtask.o: .\Code\inc\libExit.h
 .\objects\lib_vtask.o: .\Code\inc\sysInit.h
-.\objects\lib_vtask.o: .\Code\inc\libSIM900.h
+.\objects\lib_vtask.o: .\Code\inc\libAUTO.h

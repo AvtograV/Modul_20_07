@@ -12,6 +12,7 @@
 ".\objects\timers.o"
 ".\objects\main.o"
 ".\objects\sysinit.o"
+".\objects\libauto.o"
 ".\objects\libuart.o"
 ".\objects\lib_vtask.o"
 ".\objects\lib1wire.o"

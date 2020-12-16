@@ -20,4 +20,7 @@ uint8_t send_sms (char* num_phone, char* send_text_sms);
 /******************************* answering an incoming call ******************************/
 uint8_t incomCall (char* num_phone);
 
+/*****************************************************************************************/
+void getCommands_SIM_900(char* str);
+
 #endif 			// LibSIM900_H

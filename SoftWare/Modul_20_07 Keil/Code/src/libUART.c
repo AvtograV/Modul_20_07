@@ -1,18 +1,11 @@
 #include "libUART.h"
 
-extern uint16_t number_of_measurements_MQ;										// кол-во измерений (выборка) для MQ
-
-extern char ROM_1[];
-extern char ROM_7[];
-
 char buffer_RX_USART2 [size_buffer_RX_USART2];
 char* p_buf_RX = &buffer_RX_USART2[0];												// p_buf_RX указатель на buffer_RX_USART2[0]
 
 uint8_t num_bit_RX_USART2 = 0;
-
-uint8_t FLAG_SIM900_STATUS = 0;
-uint8_t FLAG_HC05_STATUS = 0;
 uint8_t FLAG_GETSTRING_STATUS = 0;
+
 
 
 /***************************** concatenate t to end of s *******************************/
@@ -122,7 +115,7 @@ void USART2_Send_String(char *str) {
 		USART2_Send_Char(str[i++]);
 }
 
-/************* узнать - содержит ли строка определённую последовательность **************/
+/************* узнать - содержит ли строка определённую последовательность *************/
 uint8_t contains (char* str, char* sequence) {
 	
 	uint8_t i_seq, i_str, seq_lenght, num_of_coincidences;				// num_of_coincidences - this is a number of matches
@@ -159,7 +152,7 @@ return seq_lenght == num_of_coincidences;
 }
 
 
-/************************** SIM900 interrupt handler ***********************************/
+/************************** USART2 interrupt handler ***********************************/
 void USART2_IRQHandler (void) {
 	if (USART2 -> SR & USART_SR_RXNE)	{
 		
@@ -175,63 +168,12 @@ void USART2_IRQHandler (void) {
 void getString_USART2 (void) {
 	if (FLAG_GETSTRING_STATUS == 1) {
 		
-		USART2_Send_String(buffer_RX_USART2);
-		
-		if (contains (buffer_RX_USART2, "FORCED_VENT_ON")) {
-			GPIOB -> BSRR |= GPIO_BSRR_BS12;
-				if (GPIOB -> ODR & GPIO_ODR_ODR12)
-					USART2_Send_String("FORCED_ON\r\n");
-		}
-		else if (contains (buffer_RX_USART2, "FORCED_VENT_OFF")) {
-			GPIOB -> BSRR |= GPIO_BSRR_BR12;
-				if (~(GPIOB -> ODR & GPIO_ODR_ODR12))
-					USART2_Send_String("FORCED_OFF\r\n");
-		}
-		if (contains (buffer_RX_USART2, "EXHAUST_VENT_ON")) {
-			GPIOB -> BSRR |= GPIO_BSRR_BS13;																		
-			USART2_Send_String("D13 ON\r\n");
-		}
-		else if (contains (buffer_RX_USART2, "EXHAUST_VENT_OFF")) {
-			GPIOB -> BSRR |= GPIO_BSRR_BR13;
-			USART2_Send_String("D13 OFF\r\n");
-		}
-		else if (contains (buffer_RX_USART2, "REQUEST")) {								// requist, after connected Bluetooth
-			FLAG_HC05_STATUS = 1;																						// 1 - temp_measure_request(ROM_1, "temp right ")
-																																			// 2 - temp_measure_request(ROM_7, "temp left ");
-			if (GPIOB -> ODR & GPIO_ODR_ODR12)
-					USART2_Send_String("FORCED_ON\r\n");
-			else if (~(GPIOB -> ODR & GPIO_ODR_ODR12))
-					USART2_Send_String("FORCED_OFF\r\n");
-		}
-		
-			// Set FLAG_SIM900_STATUS
-		else if (contains (buffer_RX_USART2, "ERROR")) {
-			FLAG_SIM900_STATUS = 0;
-		}
-		else if (contains (buffer_RX_USART2, "OK")) 	{											// requist to SIM-900 (send "AT") or after sending SMS
-			FLAG_SIM900_STATUS = 1;
-		}
-		else if (contains (buffer_RX_USART2, "RING")) {											// incom call
-			FLAG_SIM900_STATUS = 3;
-		}		
-		else if (contains (buffer_RX_USART2, "\x3E\x20\r\n")) {							// 0x20 - "space" charecter, x3E - '<'
-			FLAG_SIM900_STATUS = 2;
-		}				
-		else if (contains (buffer_RX_USART2, "+CMTI: \"SM\",")) {
-			USART2_Send_String("AT+CMGL=\"REC UNREAD\"\r\n");	
-		}
-		else if (contains (buffer_RX_USART2, "LIGHT ON")) {			
-			GPIOB -> BSRR |= GPIO_BSRR_BS12;
-			USART2_Send_String("AT+CMGDA=\"DEL READ\"\r\n");
-		}
-		else if (contains (buffer_RX_USART2, "LIGHT OFF")) {
-			GPIOB -> BSRR |= GPIO_BSRR_BR12;
-			USART2_Send_String("AT+CMGDA=\"DEL READ\"\r\n");
-		}
+		getCommands_HC_05(buffer_RX_USART2);
+		getCommands_SIM_900(buffer_RX_USART2);		
 		
 		num_bit_RX_USART2 = FLAG_GETSTRING_STATUS = 0;
 		
-		for (uint8_t i = 0; i < size_buffer_RX_USART2; i++) {									// clear buffer_RX_USART2
+		for (uint8_t i = 0; i < size_buffer_RX_USART2; i++) {									 // clear buffer_RX_USART2
 			*(p_buf_RX + i) = 0x00;
 		}
 	}

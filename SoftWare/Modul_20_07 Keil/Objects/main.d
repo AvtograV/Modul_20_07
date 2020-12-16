@@ -21,8 +21,10 @@
 .\objects\main.o: .\Code\inc\libDMA.h
 .\objects\main.o: .\Code\inc\libUART.h
 .\objects\main.o: .\Code\inc\libADC.h
+.\objects\main.o: .\Code\inc\libHc05.h
+.\objects\main.o: .\Code\inc\libSIM900.h
 .\objects\main.o: .\Code\inc\libPWM.h
 .\objects\main.o: .\Code\inc\lib_vTask.h
 .\objects\main.o: .\Code\inc\libExit.h
 .\objects\main.o: .\Code\inc\sysInit.h
-.\objects\main.o: .\Code\inc\libSIM900.h
+.\objects\main.o: .\Code\inc\libAUTO.h

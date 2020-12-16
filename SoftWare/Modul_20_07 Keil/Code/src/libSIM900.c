@@ -1,21 +1,14 @@
 #include "libSIM900.h"
 
 /******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
-char* allParamSensor[3];
-char text_sms [size_text_sms];
-
-extern char MQ135_buffer[];
-
-extern char ROM_1[];
-extern char ROM_7[];
-
-extern uint8_t FLAG_SIM900_STATUS;
-
 const uint8_t max_num_requests = 5;														// reguest "AT" <-> "OK"
+uint8_t FLAG_SIM900_STATUS = 0;
+
+//char text_sms [size_text_sms];
 
 
 /********************** check SIM900 and send his status to USART **********************/
-		uint8_t check_sim900 (void) {		
+uint8_t check_sim900 (void) {		
 		FLAG_SIM900_STATUS = 0;
 
 		USART2_Send_String("AT");																			// send a SIM900 command
@@ -80,11 +73,39 @@ uint8_t incomCall (char* comm_send_sms_to_tell) {
 		measure_and_send_result_MQ_135(100);
 		USART2_Send_String("\r\n");
 		
-		temp_measure_request(ROM_1, "temp right ");
-		temp_measure_request(ROM_7, "temp left ");
+//		temp_measure_request(ROM_1, "temp right ");
+//		temp_measure_request(ROM_7, "temp left ");
 		
 		vTaskDelay(1);	
 		USART2_Send_Char(0x1A);																				// sub
 	}
 	return 1;
+}
+
+
+void getCommands_SIM_900(char* str) {
+
+	if (contains (str, "ERROR")) {
+		FLAG_SIM900_STATUS = 0;
+	}		
+	else if (contains (str, "OK")) 	{												// requist to SIM-900 (send "AT") or after sending SMS
+		FLAG_SIM900_STATUS = 1;
+	}	
+	else if (contains (str, "RING")) {											// incom call
+			FLAG_SIM900_STATUS = 3;
+	}		
+	else if (contains (str, "\x3E\x20\r\n")) {							// 0x20 - "space" charecter, x3E - '<'
+			FLAG_SIM900_STATUS = 2;
+	}		
+	else if (contains (str, "+CMTI: \"SM\",")) {
+			USART2_Send_String("AT+CMGL=\"REC UNREAD\"\r\n");
+	}	
+	else if (contains (str, "LIGHT ON")) {			
+			GPIOB -> BSRR |= GPIO_BSRR_BS12;
+			USART2_Send_String("AT+CMGDA=\"DEL READ\"\r\n");
+	}		
+	else if (contains (str, "LIGHT OFF")) {
+			GPIOB -> BSRR |= GPIO_BSRR_BR12;
+			USART2_Send_String("AT+CMGDA=\"DEL READ\"\r\n");
+	}
 }

@@ -19,9 +19,9 @@ int main(void){
 	Init_DMA1_USART3_RX();
 	
 
-	xTaskCreate (vTaskUSART2_IRQHandler, "обработка прерываний (запросов) по USART2", 32, NULL, 1, NULL);
+	xTaskCreate (vTaskFunCallWithoutDelay, "calling various functions without time delays", 32, NULL, 1, NULL);
+	xTaskCreate(vTaskByTimeFunctionCall, "вызов функций через определённый промежуток времени", 32, NULL, 1, NULL);
 	xTaskCreate (vTaskEXTI10_IRQHandler, "обработка EXTI (внешнего прерывания) от iButton", 32, NULL, 1, NULL);
-	xTaskCreate(vTaskPeriodicFunctionCall, "вызов функций через определённый промежуток времени", 32, NULL, 1, NULL);
 	
 	vTaskStartScheduler();
 	

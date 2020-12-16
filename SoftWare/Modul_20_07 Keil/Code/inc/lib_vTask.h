@@ -9,16 +9,17 @@
 #include "sysInit.h"
 #include "libSIM900.h"
 #include "libUART.h"
+#include "libAUTO.h"
 
 
-/******************************* задача - USART2_IRQHandler ********************************/
-	void vTaskUSART2_IRQHandler(void *argument);
+/********** task - calling various functions without time delays **********/
+void vTaskFunCallWithoutDelay(void *argument);
+
+/********** задача - вызов различных функций через определённый промежуток времени **********/
+	void vTaskByTimeFunctionCall (void *argument);
 	
 /**************** задача - обработка внешнего прерывания на PB10 от iButton *****************/
 	void vTaskEXTI10_IRQHandler (void *argument);
-	
-/********** задача - вызов различных функций через определённый промежуток времени **********/
-	void vTaskPeriodicFunctionCall (void *argument);
 
 
 #endif 			// lib_vTask_H

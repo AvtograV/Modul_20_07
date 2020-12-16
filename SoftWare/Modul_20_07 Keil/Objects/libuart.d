@@ -19,3 +19,5 @@
 .\objects\libuart.o: .\FreeRTOS\inc\list.h
 .\objects\libuart.o: .\FreeRTOS\inc\queue.h
 .\objects\libuart.o: .\Code\inc\libADC.h
+.\objects\libuart.o: .\Code\inc\libHc05.h
+.\objects\libuart.o: .\Code\inc\libSIM900.h

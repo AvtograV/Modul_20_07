@@ -463,6 +463,11 @@
               <FilePath>.\Code\src\sysInit.c</FilePath>
             </File>
             <File>
+              <FileName>libAUTO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Code\src\libAUTO.c</FilePath>
+            </File>
+            <File>
               <FileName>libUART.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Code\src\libUART.c</FilePath>

@@ -1,6 +1,5 @@
 #include "lib1Wire.h"
 
-
 const uint16_t openLockTime = 5000;																				// время открытия замка (соленоид)
 const uint16_t pow10Table2_16[] = {10ul, 1ul};
 
@@ -12,20 +11,15 @@ const char ROM_1[] = {0x28, 0xff, 0x07, 0x21, 0x33, 0x17, 0x04, 0x3f};		// 0x28 
 //const char ROM_6[] = {0x28, 0xff, 0xF8, 0x8B, 0x32, 0x17, 0x03, 0x6C};
 const char ROM_7[] = {0x28, 0xff, 0xA8, 0xCA, 0x32, 0x17, 0x03, 0x96};
 //const char ROM_8[] = {0x28, 0xff, 0x9D, 0xE3, 0x80, 0x17, 0x05, 0x0D};		// sealed sensor
-																																					
+
+int64_t i_button_serial_num = 0; 																					// полученный серийный номер ключа i-button
+int16_t Tx16 = 0; 																												// результат измерения DS18B20 - двухбайтовое целое со знаком,
+																																					// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)																																					
 extern uint8_t buf_DS18B20_USART1_DMA1_tx[8];
 extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 
 extern uint8_t buf_iButton_USART3_DMA1_tx[8];
 extern uint8_t buf_iButton_USART3_DMA1_rx[8];
-
-uint8_t t_integer_current = 0; 																						// переменная для сохранения текущего значения температуры
-char t_buffer_char[] = {0};																								// массив для символьного значения температуры
-int16_t Tx16 = 0; 																												// результат измерения DS18B20 - двухбайтовое целое со знаком,
-																																					// содержащее температуру в градусах, умноженную на 16 (получено с DS18B20)
-
-int64_t i_button_serial_num = 0; 																					// полученный серийный номер ключа i-button
-
 
 /************* функция преобразование числового значения в символьное (2 знака) *************/
 char *utoa_cycle_sub(uint16_t value, char *buffer)
@@ -208,8 +202,8 @@ uint8_t OW_Send(	   // ниже указанны аргументы функци
 }
 
 
-/******************* измерить температуру и отправить в приложение Android ******************/
-void temp_measure_request(char *ROM_DS18B20, char *nameTempSensor) {
+/********* temperature measurement with a specific sensor *********/
+uint8_t temp_measure_request(char *ROM_DS18B20) {
 		
 		OW_Send(OW_SEND_RESET, usart1_DS18B20, "\x55", 1, 0, 0, OW_NO_READ);														// MATCH ROM
 		OW_Send(OW_NO_RESET, usart1_DS18B20, ROM_DS18B20, 8, 0, 0, OW_NO_READ);	
@@ -224,23 +218,7 @@ void temp_measure_request(char *ROM_DS18B20, char *nameTempSensor) {
 		// разделить полученное значение на 16
 		uint8_t t_integer_new = Tx16 >> 4;
 	
-		// проверить - если значение температуры изменилось - отправить новое значение
-		// если не изменилось - не отправлять
-		if (t_integer_current != t_integer_new ) {
-			if (t_integer_new > 0 && t_integer_new <= 50) {
-			
-				// преобразовать из цифровых в символьные значения
-				utoa_cycle_sub(t_integer_new, t_buffer_char);
-			
-				USART2_Send_String(nameTempSensor);
-				USART2_Send_String(t_buffer_char);
-				USART2_Send_Char('\r'); 																								// возврат каретки (carriage return, CR) — 0x0D, '\r'
-				USART2_Send_Char('\n'); 																								// перевод на строку вниз(line feed, LF) — 0x0A, '\n'			
-			
-				// обновить текущее значение
-			t_integer_current = t_integer_new;
-		}
-	}
+	return t_integer_new;
 }
 
 

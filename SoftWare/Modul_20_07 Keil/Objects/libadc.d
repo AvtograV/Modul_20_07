@@ -20,3 +20,5 @@
 .\objects\libadc.o: .\Code\inc\libUART.h
 .\objects\libadc.o: .\FreeRTOS\inc\queue.h
 .\objects\libadc.o: .\Code\inc\libADC.h
+.\objects\libadc.o: .\Code\inc\libHc05.h
+.\objects\libadc.o: .\Code\inc\libSIM900.h

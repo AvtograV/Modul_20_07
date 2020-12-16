@@ -4,6 +4,8 @@
 #include "stm32f10x.h"
 #include "lib1wire.h"
 #include "libADC.h"
+#include "libHc05.h"
+#include "libSIM900.h"
 
 #define FCKL_APB2 															72000000					// for USART1
 #define FCKL_APB1 															36000000					// for USART2 and USART3
@@ -13,6 +15,10 @@
 #define BAUDRATE_USART3 												9600
 
 #define size_buffer_RX_USART2										80
+
+/************* узнать - содержит ли строка определённую последовательность **************/
+uint8_t contains (char* str, char* sequence);
+
 
 /*********************** USART1 (PA9 (Single Wire (Half-Duplex) *************************/
 void Init_USART1_DS18B20(void);

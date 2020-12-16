@@ -20,3 +20,5 @@
 .\objects\libexti.o: .\FreeRTOS\inc\list.h
 .\objects\libexti.o: .\FreeRTOS\inc\queue.h
 .\objects\libexti.o: .\Code\inc\libADC.h
+.\objects\libexti.o: .\Code\inc\libHc05.h
+.\objects\libexti.o: .\Code\inc\libSIM900.h
