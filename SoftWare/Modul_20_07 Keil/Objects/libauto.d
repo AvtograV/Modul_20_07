@@ -23,3 +23,4 @@
 .\objects\libauto.o: .\Code\inc\libUART.h
 .\objects\libauto.o: .\Code\inc\libHc05.h
 .\objects\libauto.o: .\Code\inc\libSIM900.h
+.\objects\libauto.o: .\Code\inc\libAUTO.h

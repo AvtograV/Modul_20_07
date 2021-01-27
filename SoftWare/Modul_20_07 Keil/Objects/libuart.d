@@ -21,3 +21,4 @@
 .\objects\libuart.o: .\Code\inc\libADC.h
 .\objects\libuart.o: .\Code\inc\libHc05.h
 .\objects\libuart.o: .\Code\inc\libSIM900.h
+.\objects\libuart.o: .\Code\inc\libAUTO.h

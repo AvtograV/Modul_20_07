@@ -22,3 +22,4 @@
 .\objects\libsim900.o: .\Code\inc\libADC.h
 .\objects\libsim900.o: .\Code\inc\libHc05.h
 .\objects\libsim900.o: .\Code\inc\libSIM900.h
+.\objects\libsim900.o: .\Code\inc\libAUTO.h

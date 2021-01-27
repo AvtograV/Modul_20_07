@@ -22,3 +22,4 @@
 .\objects\libexti.o: .\Code\inc\libADC.h
 .\objects\libexti.o: .\Code\inc\libHc05.h
 .\objects\libexti.o: .\Code\inc\libSIM900.h
+.\objects\libexti.o: .\Code\inc\libAUTO.h

@@ -1,23 +1,22 @@
 #include "libUART.h"
 
-char buffer_RX_USART2 [size_buffer_RX_USART2];
-char* p_buf_RX = &buffer_RX_USART2[0];												// p_buf_RX указатель на buffer_RX_USART2[0]
+char buffer_RX_USART2 [size_buffer_RX_USART];
+char buffer_RX_USART3 [size_buffer_RX_USART];
+
+char* p_buf_RX_USART2 = &buffer_RX_USART2[0];												// p_buf_RX указатель на buffer_RX_USART2[0]
+char* p_buf_RX_USART3 = &buffer_RX_USART3[0];												// p_buf_RX указатель на buffer_RX_USART2[0]
+
 
 uint8_t num_bit_RX_USART2 = 0;
-uint8_t FLAG_GETSTRING_STATUS = 0;
+uint8_t num_bit_RX_USART3 = 0;
+
+uint8_t FLAG_GETSTRING_USART2_STATUS = 0;
+uint8_t FLAG_GETSTRING_USART3_STATUS = 0;
 
 
 
-/***************************** concatenate t to end of s *******************************/
-void strCat(char* s, char* t) {
-	int i, j;
-	i = j = 0;
-	
-	while(s[i] != '\0')	i++;	
-	while((s[i++] = t[j++]) != '\0');
-}
 
-/******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20) *******************/
+/******************* USART1 (PA9 (Single Wire (Half-Duplex) (DS18B20) ******************/
 void Init_USART1_DS18B20(void) {
 
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
@@ -74,8 +73,8 @@ void change_speed_USART1(uint32_t set_speed)
 
 
 
-/******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
-void Init_USART2_HC05_and_SIM900(void) {
+/************************* USART2 (PA2 - TX, PA3 - RX) (HC-05) *************************/
+void Init_USART2_HC05(void) {
 
 	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 
@@ -99,7 +98,7 @@ void Init_USART2_HC05_and_SIM900(void) {
 }
 
 
-/******************** отправить байт по USART2 (HC-05 and SIM900) **********************/
+/************************** отправить байт по USART2 (HC-05) ***************************/
 void USART2_Send_Char(char chr) {
 
 	while(!(USART2 -> SR & USART_SR_TC));
@@ -107,7 +106,7 @@ void USART2_Send_Char(char chr) {
 }
 
 
-/******************* отправить строку по USART2 (HC-05 and SIM900) *********************/
+/************************* отправить строку по USART2 (HC-05) **************************/
 void USART2_Send_String(char *str) {	
 	uint8_t i = 0;
 
@@ -125,7 +124,7 @@ uint8_t contains (char* str, char* sequence) {
 		seq_lenght++;
 	
 	while (sequence[i_seq] != str[i_str]													// find out what "str[i_str]" matches start with...
-		&& i_str < size_buffer_RX_USART2)
+		&& i_str < size_buffer_RX_USART)
 		i_str++;
 	
 	while (sequence[i_seq] == str[i_str]													// determinate the number or matches
@@ -138,7 +137,7 @@ uint8_t contains (char* str, char* sequence) {
 	if (i_seq == 1) {																							// if only one character match
 		i_seq = num_of_coincidences = 0;
 		while (sequence[i_seq] != str[i_str]												// search further in the line
-		&& i_str < size_buffer_RX_USART2)
+		&& i_str < size_buffer_RX_USART)
 			i_str++;
 	}
 	
@@ -159,24 +158,50 @@ void USART2_IRQHandler (void) {
 	buffer_RX_USART2[num_bit_RX_USART2++] = USART2 -> DR;										// записать каждый полученный бит в строку
 
 	if (buffer_RX_USART2[num_bit_RX_USART2 - 1] == '\r') {									// окончание строки
-			FLAG_GETSTRING_STATUS = 1;
+			FLAG_GETSTRING_USART2_STATUS = 1;
    }
   }
 }
 
-/***************************** получить строку по USART2 *******************************/
+/************************ получить строку по USART2 (HC - 05) **************************/
 void getString_USART2 (void) {
-	if (FLAG_GETSTRING_STATUS == 1) {
+	if (FLAG_GETSTRING_USART2_STATUS == 1) {
 		
 		getCommands_HC_05(buffer_RX_USART2);
-		getCommands_SIM_900(buffer_RX_USART2);		
 		
-		num_bit_RX_USART2 = FLAG_GETSTRING_STATUS = 0;
+		num_bit_RX_USART2 = FLAG_GETSTRING_USART2_STATUS = 0;
 		
-		for (uint8_t i = 0; i < size_buffer_RX_USART2; i++) {									 // clear buffer_RX_USART2
-			*(p_buf_RX + i) = 0x00;
+		for (uint8_t i = 0; i < size_buffer_RX_USART; i++) {									 // clear buffer_RX_USART2
+			*(p_buf_RX_USART2 + i) = 0x00;
 		}
 	}
+}
+
+
+/*********************** USART3 (PB10 - TX, PB - RX) (SIM - 900) ***********************/
+void Init_USART3_SIM900(void) {
+
+	RCC -> APB1ENR |= RCC_APB1ENR_USART3EN;
+	RCC -> APB2ENR |= RCC_APB2ENR_IOPBEN;
+	RCC -> APB2ENR |= RCC_APB2ENR_AFIOEN;
+	
+	// настройка вывода PB10 на режим альтернативной функции с активным выходом
+	// биты CNF = 10, биты MODE = X1
+	GPIOB -> CRH &= (~GPIO_CRH_CNF10_0);
+	GPIOB -> CRH |= GPIO_CRH_CNF10_1;
+	GPIOB -> CRH |= GPIO_CRH_MODE10;	
+
+	GPIOB -> CRH |= GPIO_CRH_CNF11_0;
+	GPIOB -> CRH &= ~GPIO_CRH_MODE11;
+
+	USART3 -> BRR = FCKL_APB1 / BAUDRATE_USART3;
+
+	USART3 -> CR1 |= USART_CR1_TE;
+	USART3 -> CR1 |= USART_CR1_RE;
+	USART3 -> CR1 |= USART_CR1_UE;
+
+	USART3 -> CR1 |= USART_CR1_RXNEIE;
+	NVIC_EnableIRQ(USART3_IRQn);
 }
 
 
@@ -222,7 +247,34 @@ void USART3_Send_String(char *str)
 		USART3_Send_Char(str[i++]);
 }
 
-/************************* изменить скорость USART3 (iButton) **************************/
+/************************** USART3 interrupt handler ***********************************/
+void USART3_IRQHandler (void) {
+	if (USART3 -> SR & USART_SR_RXNE)	{
+		
+	buffer_RX_USART3[num_bit_RX_USART3++] = USART3 -> DR;										// записать каждый полученный бит в строку
+
+	if (buffer_RX_USART3[num_bit_RX_USART3 - 1] == '\r') {									// окончание строки
+			FLAG_GETSTRING_USART3_STATUS = 1;
+   }
+  }
+}
+
+/*********************** получить строку по USART3 (SIM - 900) *************************/
+void getString_USART3 (void) {
+	if (FLAG_GETSTRING_USART3_STATUS == 1) {
+		
+		execute_commands_from_sim900(buffer_RX_USART3);
+		
+		num_bit_RX_USART3 = FLAG_GETSTRING_USART3_STATUS = 0;
+		
+		for (uint8_t i = 0; i < size_buffer_RX_USART; i++) {									 // clear buffer_RX_USART2
+			*(p_buf_RX_USART3 + i) = 0x00;
+		}
+	}
+}
+
+
+/*********************** изменить скорость USART3 (for iButton) ************************/
 void change_speed_USART3(uint32_t set_speed)
 {
 	USART3 -> CR1 &= (uint32_t) ~(USART_CR1_TE);

@@ -21,4 +21,5 @@
 .\objects\lib1wire.o: .\Code\inc\libUART.h
 .\objects\lib1wire.o: .\Code\inc\libHc05.h
 .\objects\lib1wire.o: .\Code\inc\libSIM900.h
+.\objects\lib1wire.o: .\Code\inc\libAUTO.h
 .\objects\lib1wire.o: .\FreeRTOS\inc\queue.h

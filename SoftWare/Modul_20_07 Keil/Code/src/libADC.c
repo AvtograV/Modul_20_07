@@ -3,40 +3,7 @@
 
 uint16_t MQ135_res = 0;
 char MQ135_buffer[] = {0};
-uint16_t sum_of_measurements_MQ;
-
-const uint16_t  pow10Table16[] = {1000ul, 100ul, 10ul, 1ul};
-
-
-/************* функция преобразование числового значения в символьное (3 знака) *************/
-static char *utoa_cycle_sub(uint16_t value, char *buffer) {
-   if (value == 0)  {
-      buffer[0] = '0';
-      buffer[1] = 0;
-      return buffer;
-   }
-	 
-   char *ptr = buffer;
-   uint8_t i = 0;
-	 
-   do {
-      uint16_t pow10 = pow10Table16[i++];
-      uint8_t count = 0;
-		 
-      while(value >= pow10) {
-         count ++;
-         value -= pow10;
-      }			
-     *ptr++ = count + '0';
-   }	 
-		
-	 while(i < 4);
-			*ptr = 0; 
-																					// удаляем ведущие нули
-   while(buffer[0] == '0') ++buffer;
-	 
-   return buffer;
-}
+uint32_t sum_of_measurements_MQ;
 
 
 /****************************************** PA5 *********************************************/
@@ -78,32 +45,28 @@ uint16_t MQ135_measure_request(void) {
 	return ADC1 -> DR;
 }
 
-/************ функция нахождения среднего арифметического числа измерений MQ-135 ************/
-uint16_t arithmetic_mean_number(uint8_t num_of_measur) {
+/** функция нахождения среднего арифметического числа от всего количества измерений MQ-135 **/
+uint16_t arithmetic_mean_number(uint8_t number_of_measur) {
+	
 	sum_of_measurements_MQ = 0;
 	
-	if (num_of_measur != 0) {
-		for (uint8_t i = 0; i < num_of_measur; i++) {
+	if (number_of_measur != 0) {
+		for (uint8_t i = 0; i < number_of_measur; i++) {
 			
 			sum_of_measurements_MQ += MQ135_measure_request();
 			
 			vTaskDelay(10);
 		}
 	}	
-	return sum_of_measurements_MQ /= num_of_measur;
+	return sum_of_measurements_MQ /= number_of_measur;
 }
 
 
-/**** измерить некое кол-во раз (number_of_measurements_MQ) MQ-135 и отправить по USART *****/
-void measure_and_send_result_MQ_135 (uint16_t number_of_measurements) {	
-	MQ135_res = 0;
+/************** измерить некое кол-во раз (number_of_measurements_MQ) MQ-135 ***************/
+uint16_t measure_MQ_135 (uint16_t number_of_measurements) {
 	
+	MQ135_res = 0;	
 	MQ135_res = arithmetic_mean_number(number_of_measurements);
 	
-	utoa_cycle_sub(MQ135_res, MQ135_buffer);			// преобразование из числового в символьнное значение
-
-	USART2_Send_String("MQ = ");
-	USART2_Send_String(MQ135_buffer);	
-	USART2_Send_Char('\r');												// необходимое окончание 
-	USART2_Send_Char('\n');												// при передаче по bluetooth
+	return MQ135_res;
 }

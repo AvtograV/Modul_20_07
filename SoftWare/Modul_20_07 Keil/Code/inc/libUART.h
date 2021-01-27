@@ -12,9 +12,9 @@
 
 #define BAUDRATE_USART1 												9600
 #define BAUDRATE_USART2 												38400
-#define BAUDRATE_USART3 												9600
+#define BAUDRATE_USART3 												38400
 
-#define size_buffer_RX_USART2										80
+#define size_buffer_RX_USART										80
 
 /************* узнать - содержит ли строка определённую последовательность **************/
 uint8_t contains (char* str, char* sequence);
@@ -30,25 +30,29 @@ void USART1_Send_String(char *str);
 void change_speed_USART1(uint32_t set_speed);
 
 
-/******************* USART2 (PA2 - TX, PA3 - RX) (HC-05 and SIM-900) *******************/
-void Init_USART2_HC05_and_SIM900(void);
+/************************* USART2 (PA2 - TX, PA3 - RX) (HC-05) **************************/
+void Init_USART2_HC05(void);
 /******************************* отправить байт по USART2 *******************************/
 void USART2_Send_Char(char chr);
 /****************************** отправить строку по USART2 ******************************/
 void USART2_Send_String(char *str);
 /*************************** принять байт от HC-05 по USART2 ****************************/
 void USART2_IRQHandler(void);
-/***************************** получить строку по USART2 *******************************/
+/***************************** получить строку по USART2 ********************************/
 void getString_USART2 (void);
 
 
-/*********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
-void Init_USART3_iButton(void);
+/*********************** USART3 (PB10 - TX, PB - RX) (SIM - 900) ************************/
+void Init_USART3_SIM900(void);
 /******************************* отправить байт по USART3 *******************************/
 void USART3_Send_Char(char chr);
 /****************************** отправить строку по USART3 ******************************/
 void USART3_Send_String(char *str);
-/*************************** изменить скорость USART3 (iButton) **************************/
+/*********************** получить строку по USART3 (SIM - 900) **************************/
+void getString_USART3 (void);
+/************************* изменить скорость USART3 (for iButton) ***********************/
 void change_speed_USART3(uint32_t set_speed);
+/*********************** USART3 (PB10 (Single Wire (Half-Duplex) ************************/
+void Init_USART3_iButton(void);
 
 #endif // LIBUART_H

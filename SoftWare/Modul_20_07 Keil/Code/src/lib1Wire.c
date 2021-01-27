@@ -1,7 +1,6 @@
 #include "lib1Wire.h"
 
 const uint16_t openLockTime = 5000;																				// время открытия замка (соленоид)
-const uint16_t pow10Table2_16[] = {10ul, 1ul};
 
 const char ROM_1[] = {0x28, 0xff, 0x07, 0x21, 0x33, 0x17, 0x04, 0x3f};		// 0x28 - family code (DS18B20)			0x3f - CRC
 //const char ROM_2[] = {0x28, 0xff, 0xCA, 0x81, 0x33, 0x17, 0x04, 0x58};		// 0xff, 0xCA, 0x81, 0x33, 0x17, 0x04 - ROM CODE (in reverse order)
@@ -21,41 +20,6 @@ extern uint8_t buf_DS18B20_USART1_DMA1_rx[8];
 extern uint8_t buf_iButton_USART3_DMA1_tx[8];
 extern uint8_t buf_iButton_USART3_DMA1_rx[8];
 
-/************* функция преобразование числового значения в символьное (2 знака) *************/
-char *utoa_cycle_sub(uint16_t value, char *buffer)
-{
-	if (value == 0)
-	{
-		buffer[0] = '0';
-		buffer[1] = 0;
-		return buffer;
-	}
-
-	char *ptr = buffer;
-	uint8_t i = 0;
-
-	do
-	{
-		uint16_t pow10 = pow10Table2_16[i++];
-		uint8_t count = 0;
-
-		while (value >= pow10)
-		{
-			count++;
-			value -= pow10;
-		}
-
-		*ptr++ = count + '0';
-
-	} while (i < 2);
-
-	*ptr = 0;
-
-	while (buffer[0] == '0') // удаляем ведущие нули
-		++buffer;
-
-	return buffer;
-}
 
 /********************************************************************************************/
 // функция преобразует один байт в восемь, для передачи через USART

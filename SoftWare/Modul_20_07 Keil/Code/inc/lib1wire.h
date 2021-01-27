@@ -42,8 +42,5 @@ void read_ROM_DS18B20(void);
 /************************ система контроля доступа IBUTTON **************************/
 void i_Button(void);
 
-/********* функция преобразование числового значения в символьное (2 знака) *********/
-char *utoa_cycle_sub(uint16_t value, char *buffer);
-
 
 #endif 								// LIB1WIRE_H
