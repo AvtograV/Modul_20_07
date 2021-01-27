@@ -2,8 +2,8 @@
 
 const uint8_t delta_temp = 2;
 
-const uint16_t threshold_smoke = 2000;
-const uint16_t critical_value_smoke = 2500;
+uint16_t threshold_smoke = 700;
+uint16_t critical_value_smoke = 1000;
 
 extern uint8_t FLAG_AUTO;
 extern uint8_t FLAG_SIM900_ALERT;
