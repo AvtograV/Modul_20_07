@@ -61,7 +61,7 @@ void execute_commands_from_sim900(char* str) {
 	
 	
 	// if the user has confirmed receipt of the notification
-	else if (contains (str, "GET SMOKE")) {		
+	else if (contains (str, "SMOKE OK")) {		
 		FLAG_SIM900_ALERT = SMOKE_ALERT_RESEIVED;		
 	}
 	
@@ -73,7 +73,7 @@ void execute_commands_from_sim900(char* str) {
 		vTaskDelay(1000);
 		USART3_Send_String("AT+CMGS=\"+79676211100\"\r\n");		
 		vTaskDelay(500);		
-		USART3_Send_String("ARMED STATUS\r\n");		
+		USART3_Send_String("ARMED STATUS - OK\r\n");		
 		vTaskDelay(1);
 		USART3_Send_Char(0x1a);																				// sub
 	}

@@ -42,24 +42,21 @@ void Init_USART1_DS18B20(void) {
 }
 
 /************************** отправить байт по USART1 (DS18B20) *************************/
-void USART1_Send_Char(char chr)
-{
+void USART1_Send_Char(char chr) {
 	while (!(USART1->SR & USART_SR_TC));
 	
 	USART1->DR = chr;
 }
 
 /************************ отправить строку по USART1 (DS18B20) *************************/
-void USART1_Send_String(char *str)
-{
+void USART1_Send_String(char *str) {
 	uint8_t i = 0;
 	while (str[i])
 		USART1_Send_Char(str[i++]);
 }
 
 /************************** изменить скорость USART1 (DS18B20) *************************/
-void change_speed_USART1(uint32_t set_speed)
-{
+void change_speed_USART1(uint32_t set_speed) {
 	USART1->CR1 &= (uint32_t) ~(USART_CR1_TE);
 	USART1->CR1 &= (uint32_t) ~(USART_CR1_RE);
 

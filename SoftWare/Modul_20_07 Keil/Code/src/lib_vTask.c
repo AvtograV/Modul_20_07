@@ -23,10 +23,10 @@ void vTaskFunCallWithoutDelay(void *argument) {
 void vTaskByTimeFunctionCall (void *argument) {
 	while(1) {
 		
-		smoke_in_room(measure_MQ_135(number_of_measurements_MQ));
+		if_smoke_in_room(measure_MQ_135(number_of_measurements_MQ));
 
-		temp_measure_request(ROM_1);				
-		temp_measure_request(ROM_7);
+		if_coolant_temp_low (temp_measure_request(ROM_1));		
+		if_coolant_temp_low (temp_measure_request(ROM_7));
 		
 		vTaskDelay(_10_minutes);
 	}

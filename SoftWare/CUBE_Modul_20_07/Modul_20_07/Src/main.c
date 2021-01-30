@@ -292,7 +292,7 @@ static void MX_USART3_UART_Init(void)
   huart3.Init.Mode = UART_MODE_TX_RX;
   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_HalfDuplex_Init(&huart3) != HAL_OK)
+  if (HAL_UART_Init(&huart3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -317,20 +317,51 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(FORCED_VENTILATION_GPIO_Port, FORCED_VENTILATION_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, ELECTRIC_BOILER_Pin|RESERVEA11_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : FORCED_VENTILATION_Pin */
-  GPIO_InitStruct.Pin = FORCED_VENTILATION_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, VENT_BEE_IN_Pin|VENT_BOILER_ROOM_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : ELECTRIC_BOILER_Pin RESERVEA11_Pin */
+  GPIO_InitStruct.Pin = ELECTRIC_BOILER_Pin|RESERVEA11_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(FORCED_VENTILATION_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : EXHAUST_VENTILATION_Pin */
-  GPIO_InitStruct.Pin = EXHAUST_VENTILATION_Pin;
+  /*Configure GPIO pins : VENT_BEE_IN_Pin VENT_BOILER_ROOM_Pin */
+  GPIO_InitStruct.Pin = VENT_BEE_IN_Pin|VENT_BOILER_ROOM_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : VENT_BEE_OUT_Pin */
+  GPIO_InitStruct.Pin = VENT_BEE_OUT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(EXHAUST_VENTILATION_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(VENT_BEE_OUT_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : RESERVE_Pin */
+  GPIO_InitStruct.Pin = RESERVE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(RESERVE_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : RESERVEA10_Pin */
+  GPIO_InitStruct.Pin = RESERVEA10_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(RESERVEA10_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB3 PB4 PB5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure peripheral I/O remapping */
+  __HAL_AFIO_REMAP_SPI1_ENABLE();
 
 }
 

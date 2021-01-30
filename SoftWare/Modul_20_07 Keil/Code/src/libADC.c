@@ -13,7 +13,7 @@ void Init_ADC1_MQ135 (void) {
 	RCC -> APB2ENR |= RCC_APB2ENR_ADC1EN; 										// тактирование модуля ADC1
 
 	GPIOA -> CRL &= ~(GPIO_CRL_MODE5 | GPIO_CRL_CNF5); 				// PA5 - аналоговый вход
-	GPIOA -> CRL &= ~(GPIO_CRL_MODE6 | GPIO_CRL_CNF6); 				// PA6 - аналоговый вход
+	GPIOA -> CRL &= ~(GPIO_CRL_MODE7 | GPIO_CRL_CNF7); 				// PA6 - аналоговый вход
 	
 	RCC -> CFGR |= RCC_CFGR_ADCPRE_DIV6;											// PCLK2 divided by 6
 	
@@ -32,7 +32,8 @@ void Init_ADC1_MQ135 (void) {
 	ADC1 -> SQR3 |= ADC_SQR3_SQ1_0;														// (0101) первое преобразование - 5 канал (PA5) - регулярная группа
 	ADC1 -> SQR3 |= ADC_SQR3_SQ1_2;
 	
-	ADC1 -> SQR3 |= ADC_SQR3_SQ2_1;														// (0110) второе преобразование - 6 канал (PA6) - регулярная группа
+	ADC1 -> SQR3 |= ADC_SQR3_SQ2_0;														// (0111) второе преобразование - 7 канал (PA7) - регулярная группа
+	ADC1 -> SQR3 |= ADC_SQR3_SQ2_1;
 	ADC1 -> SQR3 |= ADC_SQR3_SQ2_2;
 }
 

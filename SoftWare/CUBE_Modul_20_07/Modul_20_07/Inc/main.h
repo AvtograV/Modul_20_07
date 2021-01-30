@@ -58,20 +58,34 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define USART2_HC_05_SIM_900_TX_Pin GPIO_PIN_2
-#define USART2_HC_05_SIM_900_TX_GPIO_Port GPIOA
-#define USART2_HC_05_SIM_900_RX_Pin GPIO_PIN_3
-#define USART2_HC_05_SIM_900_RX_GPIO_Port GPIOA
+#define USART2_HC_05_TX_Pin GPIO_PIN_2
+#define USART2_HC_05_TX_GPIO_Port GPIOA
+#define USART2_HC_05_RX_Pin GPIO_PIN_3
+#define USART2_HC_05_RX_GPIO_Port GPIOA
 #define Analog_MQ135_1_Pin GPIO_PIN_5
 #define Analog_MQ135_1_GPIO_Port GPIOA
-#define USART3_iButton_Pin GPIO_PIN_10
-#define USART3_iButton_GPIO_Port GPIOB
-#define FORCED_VENTILATION_Pin GPIO_PIN_12
-#define FORCED_VENTILATION_GPIO_Port GPIOB
-#define EXHAUST_VENTILATION_Pin GPIO_PIN_13
-#define EXHAUST_VENTILATION_GPIO_Port GPIOB
+#define ELECTRIC_BOILER_Pin GPIO_PIN_6
+#define ELECTRIC_BOILER_GPIO_Port GPIOA
+#define Analog_MQ135_2_____Pin GPIO_PIN_7
+#define Analog_MQ135_2_____GPIO_Port GPIOA
+#define USART3_TX_SIM900_Pin GPIO_PIN_10
+#define USART3_TX_SIM900_GPIO_Port GPIOB
+#define USART3_RX_SIM900_Pin GPIO_PIN_11
+#define USART3_RX_SIM900_GPIO_Port GPIOB
+#define VENT_BEE_IN_Pin GPIO_PIN_12
+#define VENT_BEE_IN_GPIO_Port GPIOB
+#define VENT_BEE_OUT_Pin GPIO_PIN_13
+#define VENT_BEE_OUT_GPIO_Port GPIOB
+#define VENT_BOILER_ROOM_Pin GPIO_PIN_14
+#define VENT_BOILER_ROOM_GPIO_Port GPIOB
+#define RESERVE_Pin GPIO_PIN_15
+#define RESERVE_GPIO_Port GPIOB
 #define USART1_DS18B20_Pin GPIO_PIN_9
 #define USART1_DS18B20_GPIO_Port GPIOA
+#define RESERVEA10_Pin GPIO_PIN_10
+#define RESERVEA10_GPIO_Port GPIOA
+#define RESERVEA11_Pin GPIO_PIN_11
+#define RESERVEA11_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

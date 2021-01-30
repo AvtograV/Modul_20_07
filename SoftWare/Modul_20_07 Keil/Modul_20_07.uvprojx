@@ -507,11 +507,6 @@
               <FileType>1</FileType>
               <FilePath>.\Code\src\libSIM900.c</FilePath>
             </File>
-            <File>
-              <FileName>Item.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Code\Item.txt</FilePath>
-            </File>
           </Files>
         </Group>
       </Groups>

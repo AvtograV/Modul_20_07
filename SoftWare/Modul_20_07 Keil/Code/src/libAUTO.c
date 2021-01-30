@@ -3,7 +3,7 @@
 const uint8_t delta_temp = 2;
 
 uint16_t threshold_smoke = 700;
-uint16_t critical_value_smoke = 1000;
+uint16_t critical_value_smoke = 750;
 
 extern uint8_t FLAG_AUTO;
 extern uint8_t FLAG_SIM900_ALERT;
@@ -106,7 +106,7 @@ void autoStaticTemp (char* ROM, uint8_t temp) {
 }
 
 /********************************************************************************************/
-void smoke_in_room (uint16_t current_smoke) {
+void if_smoke_in_room (uint16_t current_smoke) {
 	if (current_smoke >= threshold_smoke &&															// increased gas content
 			FLAG_SIM900_ALERT == NO_VALUE) {
 		
@@ -125,3 +125,6 @@ void smoke_in_room (uint16_t current_smoke) {
 			USART3_Send_String("ATD\"+79676211100\"\r\n");									// phone call
 	}
 }
+
+/********************************************************************************************/
+void if_coolant_temp_low (uint8_t current_temp) {}
